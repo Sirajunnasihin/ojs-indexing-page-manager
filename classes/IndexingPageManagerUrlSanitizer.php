@@ -34,9 +34,10 @@ class IndexingPageManagerUrlSanitizer
         // Reject control characters / NUL bytes used in bypass attempts.
         if (preg_match('/[\x00-\x1f\x7f]/', $trimmed)) return null;
 
-        // Allow protocol-relative //host/path.
+        // Protocol-relative //host/path — pin it to https rather than emitting
+        // a scheme-less link that inherits whatever the page was loaded over.
         if (strpos($trimmed, '//') === 0) {
-            return $trimmed;
+            return 'https:' . $trimmed;
         }
 
         // Bare domain like "scopus.com/foo" → coerce to https://.

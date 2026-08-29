@@ -20,13 +20,22 @@ use PKP\db\DAORegistry;
 
 class IndexingPageManagerSmartyHelper
 {
-    /** @var bool */
-    private static $registered = false;
+    /**
+     * Which TemplateManager instances we've already registered on, keyed by
+     * spl_object_id(). A plain bool here meant that once ANY manager was
+     * registered, a later render on a DIFFERENT TemplateManager instance
+     * (component/AJAX renders can create one) silently got no helpers, so
+     * {ipm_logo_url} / {ipm_safe_url} / {ipm_blocks} were undefined there.
+     *
+     * @var array<int,true>
+     */
+    private static $registered = [];
 
     public static function register($templateMgr, $plugin)
     {
-        if (self::$registered) return;
-        self::$registered = true;
+        $key = spl_object_id($templateMgr);
+        if (isset(self::$registered[$key])) return;
+        self::$registered[$key] = true;
 
         $templateMgr->registerPlugin('modifier', 'ipm_safe_url',  [self::class, 'safeUrl']);
         $templateMgr->registerPlugin('function', 'ipm_logo_url',  [self::class, 'logoUrlFunction']);
@@ -36,7 +45,7 @@ class IndexingPageManagerSmartyHelper
     /** Test seam — used by tests to reset between assertions. */
     public static function reset()
     {
-        self::$registered = false;
+        self::$registered = [];
     }
 
     /**
@@ -64,8 +73,8 @@ class IndexingPageManagerSmartyHelper
      * Optional params:
      *   assign   When set, assigns the structured payload to this Smarty
      *            variable instead of rendering HTML. The payload is:
-     *              ['sections' => [['section'=>Section, 'indexes'=>Index[]], …],
-     *               'indexes'  => Index[] (flat, deduped, active)]
+     *              ['sections' => [['section'=>IpmSection, 'indexes'=>IpmIndex[]], …],
+     *               'indexes'  => IpmIndex[] (flat, deduped, active)]
      *   section  Slug filter — restrict to a single section.
      *   limit    Cap the flat index list to N entries (0 = no cap).
      *   target   When rendering the default strip, the link target attribute

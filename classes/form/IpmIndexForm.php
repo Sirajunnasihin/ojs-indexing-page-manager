@@ -15,6 +15,7 @@ namespace APP\plugins\generic\indexingPageManager\classes\form;
 
 use APP\core\Application;
 use APP\plugins\generic\indexingPageManager\IndexingPageManagerPlugin;
+use APP\plugins\generic\indexingPageManager\classes\IpmIndex;
 use APP\plugins\generic\indexingPageManager\classes\IpmIndexDAO;
 use APP\plugins\generic\indexingPageManager\classes\IpmIndexSectionDAO;
 use APP\plugins\generic\indexingPageManager\classes\IpmLogoStore;
@@ -130,6 +131,23 @@ class IpmIndexForm extends Form
         $rawUrl = (string) $this->getData('url');
         if ($rawUrl !== '') {
             $this->setData('url', IndexingPageManagerUrlSanitizer::sanitize($rawUrl));
+        }
+
+        // Name is a single-line plain-text label — strip tags, collapse
+        // whitespace, and cap length so an over-long or multi-line value can't
+        // bloat storage or break the card layout / JSON-LD.
+        $names = $this->getData('name');
+        if (is_array($names)) {
+            foreach ($names as $loc => $val) {
+                if (is_string($val) && $val !== '') {
+                    $clean = trim((string) preg_replace('/\s+/u', ' ', strip_tags($val)));
+                    if (mb_strlen($clean) > 300) {
+                        $clean = mb_substr($clean, 0, 300);
+                    }
+                    $names[$loc] = $clean;
+                }
+            }
+            $this->setData('name', $names);
         }
 
         // Description is plain text — strip every HTML tag at the input

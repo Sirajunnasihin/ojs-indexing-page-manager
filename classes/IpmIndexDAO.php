@@ -239,7 +239,7 @@ class IpmIndexDAO extends DAO
     }
 
     /**
-     * Build an Index object from a row.
+     * Build an IpmIndex object from a row.
      *
      * @param array $row           Raw row from ipm_indexes
      * @param bool  $skipSettings  When true, skip the per-row locale settings
@@ -274,7 +274,7 @@ class IpmIndexDAO extends DAO
      * Eager-load locale settings for a batch of indexes in a single SQL
      * query rather than one round-trip per row (resolves the N+1 problem).
      *
-     * @param Index[] $indexes
+     * @param IpmIndex[] $indexes
      */
     private function _eagerLoadSettings(array $indexes)
     {

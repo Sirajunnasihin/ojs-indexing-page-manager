@@ -77,9 +77,12 @@ class IndexingPageManagerPlugin extends GenericPlugin
      * Resolve which caption parts a template shows.
      * @return array{name:bool,desc:bool}
      */
-    public static function templateFlags($template)
+    public static function templateFlags($template): array
     {
-        switch ($template) {
+        // Cast first: on PHP 7.x `switch` uses loose comparison, so a non-string
+        // like 0/null would match `case 'logos'`. Callers pass raw getSetting()
+        // results (string|null|int), so normalise the type before matching.
+        switch ((string) $template) {
             case 'logos':     return ['name' => false, 'desc' => false];
             case 'logo-name': return ['name' => true,  'desc' => false];
             case 'logo-desc': return ['name' => false, 'desc' => true];
@@ -92,10 +95,10 @@ class IndexingPageManagerPlugin extends GenericPlugin
      * Normalise a stored/posted template value: map the legacy "named" key to
      * "logo-name-desc" and fall back to the default for anything unknown.
      */
-    public static function normalizeTemplate($template)
+    public static function normalizeTemplate($template): string
     {
         if ($template === 'named') return 'logo-name-desc'; // legacy (≤0.1.4)
-        return in_array($template, self::TEMPLATES, true) ? $template : self::DEFAULT_TEMPLATE;
+        return in_array($template, self::TEMPLATES, true) ? (string) $template : self::DEFAULT_TEMPLATE;
     }
 
     /** Allowed values for the displayColumns setting. */
@@ -871,11 +874,14 @@ class IndexingPageManagerPlugin extends GenericPlugin
                 'networkError'         => __('plugins.generic.indexingPageManager.admin.js.networkError'),
             ],
         ];
+        // ?: '{}' — if a translated string carries invalid UTF-8, json_encode()
+        // returns false and the <script type="application/json"> island would
+        // be empty (JSON.parse('') throws). An empty object degrades cleanly.
         $jsBootstrapJson = json_encode(
             $jsBootstrap,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
                 | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
-        );
+        ) ?: '{}';
 
         $tm->assign([
             'ipmJsBootstrapJson' => $jsBootstrapJson,
@@ -912,7 +918,7 @@ class IndexingPageManagerPlugin extends GenericPlugin
     private function _emitManageJson(array $payload)
     {
         header('Content-Type: application/json');
-        echo json_encode($payload);
+        echo json_encode($payload) ?: '{"ok":false,"message":"Encoding error."}';
         exit;
     }
 

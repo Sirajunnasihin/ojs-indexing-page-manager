@@ -11,9 +11,15 @@
  * Resolves to a public URL via the journal public files path. Logos are
  * accessed without auth on the frontend, matching OJS' standard public-files
  * behaviour (journal logos, favicons, etc.). Security: extension allow-list +
- * magic-byte content check + derived filename + a defensive .htaccess that
- * blocks PHP execution (Apache). On nginx/IIS add an equivalent rule denying
- * script execution under this directory.
+ * magic-byte content check + a max-size cap + derived filename + a defensive
+ * .htaccess that blocks PHP execution (Apache ONLY).
+ *
+ * IMPORTANT for nginx / IIS: the generated .htaccess is inert there. Add an
+ * equivalent rule that denies execution of .php/.phtml/.phar requests whose
+ * path is under  public/journals/<id>/indexingPageManager/logos/  (an nginx
+ * "location" regex matching that directory plus a script extension, returning
+ * 403). The derived filename (no user-controlled extension) is the primary
+ * guard; the server rule is defence-in-depth.
  */
 
 namespace APP\plugins\generic\indexingPageManager\classes;
@@ -27,6 +33,9 @@ class IpmLogoStore
 
     /** Allow-list of file extensions (lowercase). */
     private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+
+    /** Hard ceiling on a stored logo (bytes). 2 MiB is generous for a logo. */
+    private const MAX_BYTES = 2097152;
 
     /**
      * Save a logo straight from a $_FILES[...] entry (the FormData multipart
@@ -50,6 +59,10 @@ class IpmLogoStore
             return null;
         }
         if (!is_uploaded_file($upload['tmp_name'])) {
+            return null;
+        }
+        $bytes = @filesize($upload['tmp_name']);
+        if ($bytes === false || $bytes <= 0 || $bytes > self::MAX_BYTES) {
             return null;
         }
 
@@ -102,6 +115,10 @@ class IpmLogoStore
 
         $sourcePath = method_exists($tempFile, 'getFilePath') ? $tempFile->getFilePath() : null;
         if (!$sourcePath || !is_readable($sourcePath)) {
+            return null;
+        }
+        $bytes = @filesize($sourcePath);
+        if ($bytes === false || $bytes <= 0 || $bytes > self::MAX_BYTES) {
             return null;
         }
 

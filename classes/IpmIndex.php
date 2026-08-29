@@ -36,7 +36,7 @@ class IpmIndex extends DataObject
     public function setUpdatedAt($v)  { $this->setData('updatedAt', $v); }
 
     /**
-     * Pivot-only field, populated by IndexDAO::getBySectionId(). Stores the
+     * Pivot-only field, populated by IpmIndexDAO::getBySectionId(). Stores the
      * index's ordering position within a specific section.
      */
     public function getSectionSeq()   { return $this->getData('sectionSeq'); }

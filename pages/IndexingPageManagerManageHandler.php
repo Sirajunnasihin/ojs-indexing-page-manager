@@ -181,11 +181,14 @@ class IndexingPageManagerManageHandler extends Handler
                 'networkError'         => __('plugins.generic.indexingPageManager.admin.js.networkError'),
             ],
         ];
+        // ?: '{}' — invalid UTF-8 in a translation makes json_encode() return
+        // false, which would empty the <script type="application/json"> island
+        // and throw in JSON.parse(); an empty object degrades cleanly.
         $jsBootstrapJson = json_encode(
             $jsBootstrap,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
                 | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
-        );
+        ) ?: '{}';
 
         $tm->assign(array_merge([
             'pageTitle'            => $title,
@@ -412,7 +415,7 @@ class IndexingPageManagerManageHandler extends Handler
     private function _emit(array $payload)
     {
         header('Content-Type: application/json');
-        echo json_encode($payload);
+        echo json_encode($payload) ?: '{"ok":false,"message":"Encoding error."}';
         exit;
     }
 

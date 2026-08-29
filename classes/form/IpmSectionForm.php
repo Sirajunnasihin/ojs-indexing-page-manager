@@ -13,6 +13,7 @@ namespace APP\plugins\generic\indexingPageManager\classes\form;
 
 use APP\core\Application;
 use APP\plugins\generic\indexingPageManager\IndexingPageManagerPlugin;
+use APP\plugins\generic\indexingPageManager\classes\IpmSection;
 use APP\plugins\generic\indexingPageManager\classes\IpmSectionDAO;
 use APP\template\TemplateManager;
 use PKP\db\DAORegistry;
