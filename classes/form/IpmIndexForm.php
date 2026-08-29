@@ -149,8 +149,36 @@ class IpmIndexForm extends Form
             $this->setData('description', $descs);
         }
 
-        $sectionIds = (array) Application::get()->getRequest()->getUserVar('sectionIds');
-        $this->setData('sectionIds', array_values(array_filter(array_map('intval', $sectionIds))));
+        // Section assignments — accept ONLY sections that belong to this
+        // journal. Without this filter a journal manager could POST a section
+        // id from another journal; syncSectionsForIndex() would attach the
+        // index to it and the victim journal's public page (which joins the
+        // pivot table) would then render this index. Anything foreign is
+        // dropped here; if that leaves the set empty the "sections required"
+        // validator rejects the save.
+        $sectionIds = array_unique(array_filter(array_map(
+            'intval',
+            (array) Application::get()->getRequest()->getUserVar('sectionIds')
+        )));
+        $sectionIds = array_values(array_intersect($sectionIds, $this->_ownSectionIds()));
+        $this->setData('sectionIds', $sectionIds);
+    }
+
+    /**
+     * Ids of every section in the current journal — the allow-list for
+     * section assignments (see readInputData()).
+     *
+     * @return int[]
+     */
+    private function _ownSectionIds()
+    {
+        /** @var IpmSectionDAO $sectionDao */
+        $sectionDao = DAORegistry::getDAO('IpmSectionDAO');
+        $ids = [];
+        foreach ($sectionDao->getByJournalId($this->contextId) as $section) {
+            $ids[] = (int) $section->getId();
+        }
+        return $ids;
     }
 
     public function fetch($request, $template = null, $display = false)

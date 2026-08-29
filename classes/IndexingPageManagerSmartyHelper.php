@@ -93,7 +93,7 @@ class IndexingPageManagerSmartyHelper
         $seen   = [];
         foreach ($sectionDao->getByJournalId($contextId, true) as $section) {
             if ($onlySlug && $section->getSlug() !== $onlySlug) continue;
-            $indexes = $indexDao->getBySectionId($section->getId(), true);
+            $indexes = $indexDao->getBySectionId($section->getId(), true, $contextId);
             if (empty($indexes)) continue;
             $blocks[] = ['section' => $section, 'indexes' => $indexes];
             foreach ($indexes as $idx) {

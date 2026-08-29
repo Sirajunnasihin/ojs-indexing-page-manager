@@ -114,7 +114,7 @@ class IndexingPageManagerHandler extends Handler
 
         $blocks = [];
         foreach ($sections as $section) {
-            $indexes = $indexDao->getBySectionId($section->getId(), true);
+            $indexes = $indexDao->getBySectionId($section->getId(), true, $contextId);
             if (empty($indexes)) continue;
             $blocks[] = ['section' => $section, 'indexes' => $indexes];
         }

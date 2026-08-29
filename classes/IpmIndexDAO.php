@@ -58,15 +58,25 @@ class IpmIndexDAO extends DAO
      * Inactive indexes are excluded by default — the admin grid passes
      * $activeOnly = false to surface them.
      *
+     * $journalId, when given, additionally constrains the result to indexes
+     * owned by that journal. The join goes through the pivot table, so
+     * without this a pivot row pointing at a section in another journal would
+     * leak that journal's index into this one's page. Callers that resolved
+     * the section from a journal-scoped query should always pass it.
+     *
      * @return IpmIndex[]
      */
-    public function getBySectionId($sectionId, $activeOnly = true)
+    public function getBySectionId($sectionId, $activeOnly = true, $journalId = null)
     {
         $sql = 'SELECT e.*, xs.seq AS section_seq
                 FROM ipm_indexes e
                 INNER JOIN ipm_index_section xs ON e.index_id = xs.index_id
                 WHERE xs.section_id = ?';
         $params = [(int) $sectionId];
+        if ($journalId !== null) {
+            $sql .= ' AND e.journal_id = ?';
+            $params[] = (int) $journalId;
+        }
         if ($activeOnly) {
             $sql .= ' AND e.is_active = 1';
         }

@@ -51,7 +51,7 @@ class IndexingPageManagerAdminController
         $usedSectionCount = 0;
 
         foreach ($sections as $section) {
-            $indexes = $indexDao->getBySectionId($section->getId(), false);
+            $indexes = $indexDao->getBySectionId($section->getId(), false, $contextId);
             if (!empty($indexes)) {
                 $usedSectionCount++;
             }
@@ -220,8 +220,8 @@ class IndexingPageManagerAdminController
         foreach ($sectionDao->getByJournalId($contextId) as $section) {
             $rows[] = [
                 'section'       => $section,
-                'totalIndexes'  => $pivotDao->countIndexesInSection($section->getId(), false),
-                'activeIndexes' => $pivotDao->countIndexesInSection($section->getId(), true),
+                'totalIndexes'  => $pivotDao->countIndexesInSection($section->getId(), false, $contextId),
+                'activeIndexes' => $pivotDao->countIndexesInSection($section->getId(), true, $contextId),
             ];
         }
 

@@ -143,13 +143,17 @@ class IpmIndexSectionDAO extends DAO
         return $ids;
     }
 
-    public function countIndexesInSection($sectionId, $activeOnly = true)
+    public function countIndexesInSection($sectionId, $activeOnly = true, $journalId = null)
     {
         $sql = 'SELECT COUNT(*) AS n
                 FROM ipm_index_section xs
                 INNER JOIN ipm_indexes e ON xs.index_id = e.index_id
                 WHERE xs.section_id = ?';
         $params = [(int) $sectionId];
+        if ($journalId !== null) {
+            $sql .= ' AND e.journal_id = ?';
+            $params[] = (int) $journalId;
+        }
         if ($activeOnly) {
             $sql .= ' AND e.is_active = 1';
         }
