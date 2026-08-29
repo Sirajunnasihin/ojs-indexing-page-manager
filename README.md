@@ -10,23 +10,23 @@ Everything is managed from your journal's admin panel. **No coding knowledge req
 
 **The public page your readers see**
 
-![Public indexing page — a logo gallery of the databases the journal is listed in](screenshots/IPM4en.png)
+![Public indexing page — a logo gallery of the databases the journal is listed in](screenshots/public-page.png)
 
 **Manage your indexes from the admin panel** — add, edit, reorder (drag & drop) and show/hide.
 
-![Admin — manage the index list, grouped by section](screenshots/IPM1en.png)
+![Admin — manage the index list, grouped by section](screenshots/admin-index-list.png)
 
 **Four ready-made categories**, plus any custom sections you add.
 
-![Admin — the four built-in sections](screenshots/IPM2en.png)
+![Admin — the four built-in sections](screenshots/admin-sections.png)
 
 **Pick a layout and column count** — change it any time.
 
-![Admin — choose a display template and number of columns](screenshots/IPM3en.png)
+![Admin — choose a display template and number of columns](screenshots/admin-template.png)
 
 **A ready-made menu item** lets you add the page to your site menu in one step.
 
-![Adding the ready-made "Indexes & Databases" item to the navigation menu](screenshots/IPM4enAddItemMenu.png)
+![Adding the ready-made "Indexes & Databases" item to the navigation menu](screenshots/nav-menu-item.png)
 
 ---
 
