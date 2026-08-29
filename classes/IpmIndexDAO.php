@@ -121,9 +121,44 @@ class IpmIndexDAO extends DAO
             ]
         );
 
-        $index->setId($this->getInsertId());
+        // Defence-in-depth against a stale lastInsertId(): if the resolved id
+        // is missing or its row doesn't actually belong to this journal (which
+        // can happen when several indexes are inserted back-to-back in one
+        // request and the PDO connection lastInsertId() reads is out of sync
+        // with the one DAO::update() ran the INSERT on), fall back to the
+        // newest row for this journal. Getting this wrong silently writes this
+        // index's localized name/description onto a DIFFERENT index's settings
+        // rows. Mirrors IpmSectionDAO::insertObject()'s natural-key fallback;
+        // indexes have no natural key, so MAX(index_id) per journal is the
+        // best available anchor (sound in the sequential seed loop this guards).
+        $insertId = $this->getInsertId();
+        $journalId = (int) $index->getJournalId();
+        if (!$insertId || !$this->_idOwnsJournal($insertId, $journalId)) {
+            $row = $this->retrieve(
+                'SELECT MAX(index_id) AS max_id FROM ipm_indexes WHERE journal_id = ?',
+                [$journalId]
+            )->current();
+            if ($row && $row->max_id) {
+                $insertId = (int) $row->max_id;
+            }
+        }
+
+        $index->setId($insertId);
         $this->updateLocaleFields($index);
         return $index->getId();
+    }
+
+    /**
+     * @return bool Whether $indexId's row is owned by $journalId — a sanity
+     *              check on the value returned by getInsertId().
+     */
+    private function _idOwnsJournal($indexId, $journalId)
+    {
+        $row = $this->retrieve(
+            'SELECT 1 FROM ipm_indexes WHERE index_id = ? AND journal_id = ?',
+            [(int) $indexId, (int) $journalId]
+        )->current();
+        return (bool) $row;
     }
 
     public function updateObject($index)
@@ -271,7 +306,12 @@ class IpmIndexDAO extends DAO
                     case 'float':  $value = (float) $value; break;
                     case 'object':
                         $decoded = json_decode((string) $value, true);
-                        $value = ($decoded !== null) ? $decoded : @unserialize((string) $value);
+                        // allowed_classes:false — settings values are only ever
+                        // arrays/scalars; never revive arbitrary objects from a
+                        // DB column (object-injection guard).
+                        $value = ($decoded !== null)
+                            ? $decoded
+                            : @unserialize((string) $value, ['allowed_classes' => false]);
                         break;
                     // 'string' or null → leave as-is
                 }

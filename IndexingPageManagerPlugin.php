@@ -770,36 +770,51 @@ class IndexingPageManagerPlugin extends GenericPlugin
         $verb = (string) $request->getUserVar('verb');
         $controller = new \APP\plugins\generic\indexingPageManager\classes\IndexingPageManagerAdminController($this);
 
-        switch ($verb) {
-            // Initial modal open — self-contained: bundles the admin CSS/JS
-            // and a small bootstrap script (nothing else has loaded them
-            // yet) around the index list fragment. Every other verb below
-            // is fetched by that bootstrap script's own JS afterwards, so it
-            // only ever needs to return the bare fragment.
-            case '':
-            case 'manage':
-            case 'indexes':
-                return new JSONMessage(true, $this->_manageModalShellHtml($request, $controller));
+        // Every verb below is consumed by our own admin JS via fetch(), which
+        // expects a JSON body. The controller's _assertPostAndCsrf() throws a
+        // bare \Exception on a missing/stale CSRF token or a non-POST request;
+        // without this guard that propagated out of manage() as an OJS HTML
+        // 500 page (the modal JS then just showed a generic network error).
+        // Return a well-formed error envelope instead — {status:false,content}
+        // is understood by both consumer shapes (postAction + ipmSubmitWithFiles).
+        try {
+            switch ($verb) {
+                // Initial modal open — self-contained: bundles the admin CSS/JS
+                // and a small bootstrap script (nothing else has loaded them
+                // yet) around the index list fragment. Every other verb below
+                // is fetched by that bootstrap script's own JS afterwards, so it
+                // only ever needs to return the bare fragment.
+                case '':
+                case 'manage':
+                case 'indexes':
+                    return new JSONMessage(true, $this->_manageModalShellHtml($request, $controller));
 
-            case 'indexForm':     return $controller->indexForm($request);
-            case 'indexSave':     $this->_emitManageJson($controller->indexSave($request));
-            case 'indexDelete':   return $controller->indexDelete($request);
-            case 'indexToggle':   return $controller->indexToggle($request);
-            case 'indexReorder':  return $controller->indexReorder($request);
+                case 'indexForm':     return $controller->indexForm($request);
+                case 'indexSave':     $this->_emitManageJson($controller->indexSave($request));
+                case 'indexDelete':   return $controller->indexDelete($request);
+                case 'indexToggle':   return $controller->indexToggle($request);
+                case 'indexReorder':  return $controller->indexReorder($request);
 
-            case 'sections':      return $controller->sectionList($request);
-            case 'sectionForm':   return $controller->sectionForm($request);
-            case 'sectionSave':   $this->_emitManageJson($controller->sectionSave($request));
-            case 'sectionDelete': return $controller->sectionDelete($request);
-            case 'sectionToggle': return $controller->sectionToggle($request);
-            case 'sectionReorder':return $controller->sectionReorder($request);
+                case 'sections':      return $controller->sectionList($request);
+                case 'sectionForm':   return $controller->sectionForm($request);
+                case 'sectionSave':   $this->_emitManageJson($controller->sectionSave($request));
+                case 'sectionDelete': return $controller->sectionDelete($request);
+                case 'sectionToggle': return $controller->sectionToggle($request);
+                case 'sectionReorder':return $controller->sectionReorder($request);
 
-            case 'templates':
-            case 'templateSelect':return $controller->templateSelect($request);
-            case 'templateSave':  $this->_emitManageJson($controller->templateSave($request));
+                case 'templates':
+                case 'templateSelect':return $controller->templateSelect($request);
+                case 'templateSave':  $this->_emitManageJson($controller->templateSave($request));
 
-            case 'settings':      return $controller->settings($request);
-            case 'settingsSave':  $this->_emitManageJson($controller->settingsSave($request));
+                case 'settings':      return $controller->settings($request);
+                case 'settingsSave':  $this->_emitManageJson($controller->settingsSave($request));
+            }
+        } catch (\Throwable $e) {
+            error_log(sprintf(
+                '[indexingPageManager] manage(%s) failed: %s: %s',
+                $verb, get_class($e), $e->getMessage()
+            ));
+            return new JSONMessage(false, __('plugins.generic.indexingPageManager.admin.error.invalidRequest'));
         }
 
         return parent::manage($args, $request);

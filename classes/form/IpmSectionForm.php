@@ -88,8 +88,8 @@ class IpmSectionForm extends Form
             return;
         }
 
-        // Auto-generate the slug from the primary-locale display name when
-        // blank, so admins don't have to think about URL slugs.
+        // Derive the slug from the primary-locale display name when the admin
+        // left it blank, so they don't have to think about URL slugs.
         $slug = trim((string) $this->getData('slug'));
         if ($slug === '') {
             $names   = (array) $this->getData('displayName');
@@ -98,9 +98,18 @@ class IpmSectionForm extends Form
             if ($source === '') {
                 foreach ($names as $v) { if ($v) { $source = $v; break; } }
             }
-            $slug = self::slugify($source);
-            $slug = $this->_uniqueSlug($slug);
+            $slug = $source;
         }
+
+        // Normalise to the slug charset AND guarantee (journal_id, slug)
+        // uniqueness for every path — typed or derived. Previously a
+        // hand-edited duplicate slug skipped _uniqueSlug() entirely and hit
+        // the UNIQUE constraint on save, throwing an uncaught exception (500)
+        // instead of a validation error. slugify() always yields a value the
+        // RegExp validator accepts; _uniqueSlug() is a no-op when the slug is
+        // unchanged for the section being edited.
+        $slug = self::slugify($slug);
+        $slug = $this->_uniqueSlug($slug);
         $this->setData('slug', $slug);
     }
 
