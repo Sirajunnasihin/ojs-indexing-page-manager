@@ -3,6 +3,27 @@
 All notable changes to this plugin are documented here. Versioning follows the
 plugin's `version.xml` `<release>` value; every shipped change bumps it.
 
+## 0.4.9 — 2026-08-29
+
+- **Fix: the manage page STILL redirected to
+  `/user/authorizationDenied?message=user.authorization.privateOperation`
+  (0.4.8's authorize() rewrite wasn't the whole story).** The real problem
+  was the base class: `IndexingPageManagerManageHandler` extended
+  `PKP\controllers\page\PageHandler`, which is only meant for the `tasks`
+  and `css` page components. `PageHandler::authorize()` adds a
+  `PKPSiteAccessPolicy($request, ['tasks','css'], SITE_ACCESS_ALL_ROLES)`
+  that returns DENY for every other operation — and with the handler's
+  deny-overrides combination that hard-denied the entire page regardless of
+  our own `ContextAccessPolicy`. It now extends `APP\handler\Handler`
+  directly, exactly like the frontend handler and like core
+  `PKPManageHandler` / `SettingsHandler`. Backend chrome is unchanged
+  (`_isBackendPage` + `setupTemplate()`). `authorize()` keeps the
+  `ContextAccessPolicy` from 0.4.8.
+  - Note: the follow-on core fatal *"Invalid locale key for auth message"*
+    in `PKPUserHandler::authorizationDenied()` (from a themed request to
+    `/user/authorizationDenied` with no `message` param) is a downstream
+    OJS-core robustness bug — it disappears once the page stops denying.
+
 ## 0.4.8 — 2026-08-29
 
 - **Fix: the new sidebar entry led to "The operation you tried to access is

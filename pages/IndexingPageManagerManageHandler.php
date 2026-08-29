@@ -37,12 +37,24 @@ use APP\plugins\generic\indexingPageManager\classes\form\IpmIndexForm;
 use APP\plugins\generic\indexingPageManager\classes\form\IpmSectionForm;
 use APP\plugins\generic\indexingPageManager\classes\form\IpmSettingsForm;
 use APP\plugins\generic\indexingPageManager\classes\form\IpmTemplateForm;
+use APP\handler\Handler;
 use APP\template\TemplateManager;
-use PKP\controllers\page\PageHandler;
 use PKP\plugins\PluginRegistry;
 use PKP\security\authorization\ContextAccessPolicy;
 
-class IndexingPageManagerManageHandler extends PageHandler
+/**
+ * IMPORTANT: extends APP\handler\Handler, NOT
+ * PKP\controllers\page\PageHandler. PageHandler is only for the `tasks` and
+ * `css` page components — its authorize() adds a
+ * PKPSiteAccessPolicy($request, ['tasks','css'], SITE_ACCESS_ALL_ROLES)
+ * that returns DENY for any other op, and with the handler's
+ * deny-overrides combination that hard-denies this whole page →
+ * /user/authorizationDenied?message=user.authorization.privateOperation.
+ * Core management pages (PKPManageHandler / SettingsHandler) all extend
+ * Handler directly; so do we. Backend chrome still works via
+ * $this->_isBackendPage + setupTemplate().
+ */
+class IndexingPageManagerManageHandler extends Handler
 {
     /** @var IndexingPageManagerPlugin */
     public $plugin;
