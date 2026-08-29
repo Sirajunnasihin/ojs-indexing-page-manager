@@ -3,6 +3,94 @@
 All notable changes to this plugin are documented here. Versioning follows the
 plugin's `version.xml` `<release>` value; every shipped change bumps it.
 
+## 0.4.7 — 2026-08-29
+
+- **Fix: sidebar entry never appeared even with no errors in the log.**
+  0.4.6 stopped `_getUserRoles()` from *throwing*, but its role read
+  (`$userGroup->getRoleId()`) still doesn't exist on OJS 3.5, where
+  `UserGroup` is an Eloquent model with a `role_id` attribute and no
+  `getRoleId()` method — so the call failed, the catch swallowed it, roles
+  came back empty, and `addSidebarLink()` bailed before adding the item.
+  New `_readRoleId()` helper reads `getRoleId()` (3.4 DataObject) OR the
+  `roleId` / `role_id` attribute (3.5 model). The sidebar item should now
+  show for Journal Managers / Site Admins.
+- **Fix: "Installed Plugins" list stuck on "Loading".** Root cause was
+  `register()` calling `_maybeRunSetup()` (migration + seeding) on *every*
+  request — which, with the plugin non-lazy since 0.4.4, included the
+  plugins grid's own AJAX fetch. DB writes on that hot path made the
+  component response unreliable. `register()` now only registers hooks;
+  `_maybeRunSetup()` runs solely from the admin entry points —
+  `manage()` (modal) and `addSidebarLink()` (any backend page) — where a
+  context is present and DB work is expected. Still version-stamped, so
+  it's one cheap `getSetting()` after the first pass.
+- `registerSmartyHelpers()` wrapped in try/catch too — no
+  `TemplateManager::display` callback can break a page render now.
+- **Public page URL changed** from `/index.php/<journal>/ipmShowcase` to
+  **`/index.php/<journal>/indexes-and-databases`** (hyphens are valid — core
+  `cleanFileVar()` allows `[\w-]`). The old `/ipmShowcase` page,
+  `/gateway/plugin/ipmShowcase`, and `/about/<slug>` all still resolve as
+  fallbacks; `getFrontendUrl()` (Preview button, Settings public-URL line,
+  Navigation Menu item) now emits the new URL.
+
+## 0.4.6 — 2026-08-29
+
+- **Fix: `Exception: Unrecognized DAO UserGroupDAO` thrown from the
+  `TemplateManager::display` hook on every backend page** (reported after
+  deploying 0.4.5 — the sidebar entry still didn't appear because
+  `addSidebarLink()` threw before it could add the item). OJS 3.5 removed
+  `UserGroupDAO`; `DAORegistry::getDAO('UserGroupDAO')` now *throws* instead
+  of returning null. `_getUserRoles()` now uses
+  `Repo::userGroup()->userUserGroups($userId, $contextId)` (present on both
+  3.4 and 3.5), falls back to the legacy DAO only for older installs, and
+  can no longer throw — worst case it returns `[]` and the link is hidden.
+  The whole `addSidebarLink()` body is also wrapped so nothing in it can
+  ever break `TemplateManager::display` again.
+- **The sidebar item now carries an `icon`** (`'Settings'`). Every top-level
+  entry in the 3.5 admin sidebar has one; an item without an icon renders
+  blank. Item shape (`name` / `url` / `icon` / `isCurrent`, appended to the
+  `menu` Vue state) now matches core `setupBackendPage()` exactly.
+
+## 0.4.5 — 2026-08-29
+
+Follow-ups to the 0.4.4 non-lazy switch, reported on the same install.
+
+- **Fix: "Installed Plugins" list stuck on "Loading" forever, and the
+  Indexing Page Manager admin UI rendering as a stray block at the bottom of
+  *Settings → Website*.** Both came from the `Template::Settings::website`
+  hook (`injectWebsiteSettingsTab()`), which appended a full self-contained
+  admin shell — CSS, JS bootstrap, the whole index list — into the Website
+  settings page. Now that the plugin actually loads (0.4.4), that block
+  rendered for real; its injected `<script>` ran on the settings page and
+  broke the Vue plugins grid's init, leaving it spinning. **The
+  `Template::Settings::website` embedding is removed entirely**
+  (`injectWebsiteSettingsTab()` and `templates/admin/websiteSettingsSection.tpl`
+  deleted). Management is now reached two ways, both unaffected by this:
+  the **sidebar entry** (below) and the plugin grid's **"Manage Indexing
+  Page"** modal.
+- **The sidebar now carries a dedicated "Indexing Page Manager" entry.**
+  `addSidebarLink()` already added one, but it never appeared because the
+  plugin wasn't loading on backend page requests (the lazy-load bug). It now
+  shows for Journal Managers / Site Admins and opens the full management UI
+  at `/<journal>/indexingPageManager/indexes` — which works now that the
+  `LoadHandler` hook is reliably registered. Label changed from "Manage
+  Indexing Page" to "Indexing Page Manager".
+- **All hooks are now registered unconditionally in `register()`** (not just
+  the two routing hooks from 0.4.3). Since the plugin is non-lazy,
+  `register()` runs once per request with `$mainContextId = null` — before
+  the context is resolved — so the old `if ($this->getEnabled($ctx))` gate
+  around hook registration evaluated `false` and dropped the sidebar link,
+  nav-menu type and Smarty helpers for the whole request. Each callback
+  (`registerSmartyHelpers`, `addSidebarLink`, `addNavigationMenuItemTypes`,
+  `setNavigationMenuItemDisplaySettings`) now does its own `getEnabled()`
+  check at call time, when the context is resolved.
+- **DB seeding/migration no longer runs on every request.** With the plugin
+  non-lazy, the old unconditional seed block would fire its
+  `_maybeSeedBuiltIns` / `_maybeRepairBuiltInLabels` / `_maybeSeedDefaultSettings`
+  / demo passes on *every* page load. It's now `_maybeRunSetup()`, guarded by
+  a per-journal `ipmSetupStamp` setting so it does real work only once per
+  plugin version, with a safety-net call the first time a manager opens a
+  backend page.
+
 ## 0.4.4 — 2026-08-29
 
 - **Fix: the public showcase still 404'd on every route, with nothing in the

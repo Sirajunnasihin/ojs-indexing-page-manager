@@ -39,7 +39,7 @@ Everything is managed from your journal's admin panel. **No coding knowledge req
 - **Managed entirely from the admin panel** — add, edit, show/hide and reorder by drag-and-drop. No coding knowledge required.
 - **Layout choices** — four display styles (logos only / logo + name / logo + name + description / logo + description) and 3, 4 or 5 columns.
 - **Fits your theme** — looks at home in any OJS theme, with a centred page title and a mobile-friendly layout.
-- **A ready public page** — at a short URL, `/<journal>/ipmShowcase`, which you can add to your menu with one click using the built-in menu item.
+- **A ready public page** — at `/<journal>/indexes-and-databases`, which you can add to your menu with one click using the built-in menu item.
 - **Bilingual** — ships with English and Turkish, and works on multilingual journals.
 - **Search-engine friendly** — adds structured data so search engines understand where your journal is indexed.
 
@@ -60,7 +60,7 @@ Everything is managed from your journal's admin panel. **No coding knowledge req
 
 After enabling, an **Indexing Page** entry appears in your admin sidebar. Add your indexes and arrange them there.
 
-Your public page is available at `https://your-site/index.php/<journal>/ipmShowcase`. The older addresses `…/gateway/plugin/ipmShowcase` and `…/about/databases` still work as fallbacks. To put the page in your site navigation, go to *Settings → Website → Setup → Navigation Menus → Add Item* and choose the ready-made **“Indexes & Databases page”** item — no manual link needed.
+Your public page is available at `https://your-site/index.php/<journal>/indexes-and-databases`. The older addresses `…/ipmShowcase`, `…/gateway/plugin/ipmShowcase` and `…/about/databases` still work as fallbacks. To put the page in your site navigation, go to *Settings → Website → Setup → Navigation Menus → Add Item* and choose the ready-made **“Indexes & Databases page”** item — no manual link needed.
 
 ## Works with every theme
 
@@ -95,7 +95,7 @@ Her şey derginizin yönetim panelinden yönetilir. **Kod bilgisi gerektirmez.**
 - **Tamamen panelden yönetim** — ekleme, düzenleme, gösterme/gizleme ve sürükle-bırak ile sıralama. Kod bilgisi gerektirmez.
 - **Görünüm seçenekleri** — dört şablon (yalnız logo / logo + ad / logo + ad + açıklama / logo + açıklama) ve 3, 4 veya 5 sütun.
 - **Temanıza uyum** — her OJS temasında doğal durur; başlık ortalanır, mobil uyumludur.
-- **Hazır bir genel sayfa** — kısa bir adreste, `/<dergi>/ipmShowcase`; hazır menü öğesiyle tek tıkla menünüze ekleyebilirsiniz.
+- **Hazır bir genel sayfa** — `/<dergi>/indexes-and-databases` adresinde; hazır menü öğesiyle tek tıkla menünüze ekleyebilirsiniz.
 - **İki dilli** — İngilizce ve Türkçe ile gelir; çok dilli dergilerde çalışır.
 - **Arama motoru dostu** — derginizin nerede dizinlendiğini arama motorlarının anlaması için yapılandırılmış veri ekler.
 
@@ -116,7 +116,7 @@ Her şey derginizin yönetim panelinden yönetilir. **Kod bilgisi gerektirmez.**
 
 Etkinleştirince yönetim menünüzde **İndeksleme Sayfası** girişi belirir. Dizinlerinizi oradan ekleyip düzenlersiniz.
 
-Genel sayfanız `https://siteniz/index.php/<dergi>/ipmShowcase` adresindedir. Eski adresler `…/gateway/plugin/ipmShowcase` ve `…/about/databases` yedek olarak çalışmaya devam eder. Sayfayı menünüze eklemek için *Ayarlar → Web Sitesi → Kurulum → Gezinme Menüleri → Öğe Ekle* yolunu izleyip hazır **“İndeksler ve Veritabanları sayfası”** öğesini seçin — elle bağlantı eklemenize gerek yok.
+Genel sayfanız `https://siteniz/index.php/<dergi>/indexes-and-databases` adresindedir. Eski adresler `…/ipmShowcase`, `…/gateway/plugin/ipmShowcase` ve `…/about/databases` yedek olarak çalışmaya devam eder. Sayfayı menünüze eklemek için *Ayarlar → Web Sitesi → Kurulum → Gezinme Menüleri → Öğe Ekle* yolunu izleyip hazır **“İndeksler ve Veritabanları sayfası”** öğesini seçin — elle bağlantı eklemenize gerek yok.
 
 ## Tüm temalarla çalışır
 

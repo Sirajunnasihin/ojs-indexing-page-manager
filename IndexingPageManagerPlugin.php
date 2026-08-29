@@ -105,15 +105,22 @@ class IndexingPageManagerPlugin extends GenericPlugin
     public const DEFAULT_SLUG = 'databases';
 
     /**
-     * Top-level page slug for the public showcase, giving the short URL
-     * /index.php/<journal>/ipmShowcase (served by IndexingPageManagerHandler
-     * via the LoadHandler hook). Deliberately the SAME token as
-     * IndexingPageManagerGatewayPlugin::PLUGIN_PATH so the plugin only ever
-     * claims one word. This is now the primary, advertised public URL (see
-     * getFrontendUrl()); the /gateway/plugin/ipmShowcase route and the
-     * /about/<slug> route both remain as fallbacks.
+     * Top-level page slug for the public showcase, giving the URL
+     * /index.php/<journal>/indexes-and-databases (served by
+     * IndexingPageManagerHandler via the LoadHandler hook). This is the
+     * primary, advertised public URL (see getFrontendUrl()); the
+     * /gateway/plugin/ipmShowcase route and the /about/<slug> route both
+     * remain as fallbacks. Hyphens are fine here — core cleanFileVar()
+     * allows [\w-].
      */
-    public const SHOWCASE_PAGE = 'ipmShowcase';
+    public const SHOWCASE_PAGE = 'indexes-and-databases';
+
+    /**
+     * Legacy top-level page slug (0.4.3–0.4.6). Still accepted by
+     * loadHandler() so links/bookmarks made against the old URL keep
+     * working; not advertised any more.
+     */
+    public const SHOWCASE_PAGE_LEGACY = 'ipmShowcase';
 
     /**
      * Ops already handled by PKP's own AboutContextHandler
@@ -181,12 +188,14 @@ class IndexingPageManagerPlugin extends GenericPlugin
         Hook::add('NavigationMenus::displaySettings', [$this, 'setNavigationMenuItemDisplaySettings']);
         Hook::add('Context::delete', [$this, 'cleanupOnJournalDelete']);
 
-        // Self-healing DB setup (migration + seeding). Guarded by a per-journal
-        // version stamp so it does real work only once per plugin version —
-        // NOT on every request (important now that the plugin is non-lazy and
-        // register() runs for every request). No-op until the context is
-        // resolvable, then runs on the next request.
-        $this->_maybeRunSetup($mainContextId);
+        // NOTE: DB setup (migration + seeding) is deliberately NOT run from
+        // here. register() executes on *every* request now that the plugin
+        // is non-lazy, including component/AJAX calls (the plugins grid's
+        // own fetch, etc.) — doing DB writes on that hot path was fragile.
+        // _maybeRunSetup() is instead called from the admin entry points
+        // (manage(), addSidebarLink()) where a journal context is present
+        // and DB work is expected. It is version-stamped, so it is a single
+        // cheap getSetting() after the first successful pass.
 
         return true;
     }
@@ -297,11 +306,10 @@ class IndexingPageManagerPlugin extends GenericPlugin
         $page = $args[0];
         $handler =& $args[3];
 
+        $isShowcase = ($page === self::SHOWCASE_PAGE || $page === self::SHOWCASE_PAGE_LEGACY);
+
         // Only our page families are candidates.
-        if ($page !== 'indexingPageManager'
-            && $page !== 'about'
-            && $page !== self::SHOWCASE_PAGE
-        ) {
+        if ($page !== 'indexingPageManager' && $page !== 'about' && !$isShowcase) {
             return false;
         }
 
@@ -320,9 +328,10 @@ class IndexingPageManagerPlugin extends GenericPlugin
             return true;
         }
 
-        // (2) Primary public route — the short top-level page
-        //     /index.php/<journal>/ipmShowcase.
-        if ($page === self::SHOWCASE_PAGE) {
+        // (2) Primary public route — the top-level page
+        //     /index.php/<journal>/indexes-and-databases
+        //     (plus the legacy /ipmShowcase alias).
+        if ($isShowcase) {
             // PKPPageRouter requires $op to be a real method name on the
             // handler; force it to `index` so any trailing path segment
             // still renders the showcase rather than 404ing at the router.
@@ -373,13 +382,13 @@ class IndexingPageManagerPlugin extends GenericPlugin
     }
 
     /**
-     * The public showcase's canonical URL — the short top-level page route
-     * /index.php/<journal>/ipmShowcase (see SHOWCASE_PAGE / loadHandler()).
-     * Single source of truth: the admin "Preview" button, the Settings
-     * page's public-URL display, and the Navigation Menu item all resolve
-     * through this one method. The /gateway/plugin/ipmShowcase and
-     * /about/<slug> routes still work as fallbacks but are no longer what
-     * the plugin advertises.
+     * The public showcase's canonical URL — the top-level page route
+     * /index.php/<journal>/indexes-and-databases (see SHOWCASE_PAGE /
+     * loadHandler()). Single source of truth: the admin "Preview" button,
+     * the Settings page's public-URL display, and the Navigation Menu item
+     * all resolve through this one method. The legacy /ipmShowcase page,
+     * the /gateway/plugin/ipmShowcase route and the /about/<slug> route all
+     * still work as fallbacks but are no longer what the plugin advertises.
      */
     public function getFrontendUrl($request, $context = null)
     {
@@ -442,15 +451,26 @@ class IndexingPageManagerPlugin extends GenericPlugin
      */
     public function registerSmartyHelpers($hookName, $args)
     {
-        /** @var TemplateManager $templateMgr */
-        $templateMgr = $args[0];
-
-        IndexingPageManagerSmartyHelper::register($templateMgr, $this);
+        // Bulletproof: this runs on every TemplateManager::display, incl.
+        // component/AJAX renders — it must never throw out of the hook.
+        try {
+            if (!$this->getEnabled()) {
+                return false;
+            }
+            /** @var TemplateManager $templateMgr */
+            $templateMgr = $args[0];
+            IndexingPageManagerSmartyHelper::register($templateMgr, $this);
+        } catch (\Throwable $e) {
+            error_log('[indexingPageManager] registerSmartyHelpers skipped: ' . $e->getMessage());
+        }
         return false;
     }
 
     /**
-     * Inject an "Indexing Page" entry into the OJS admin sidebar menu.
+     * Inject an "Indexing Page Manager" entry into the OJS admin sidebar menu
+     * — its own top-level item, opening the full management UI at
+     * /<journal>/indexingPageManager/indexes (served by
+     * IndexingPageManagerManageHandler via the LoadHandler hook).
      *
      * Detection strategy: infer "this is a backend page" from the presence of
      * the `menu` Vue state (populated by setupBackendPage()) rather than
@@ -458,43 +478,66 @@ class IndexingPageManagerPlugin extends GenericPlugin
      */
     public function addSidebarLink($hookName, $args)
     {
-        /** @var TemplateManager $templateMgr */
-        $templateMgr = $args[0];
+        // Never let anything in here throw out of the TemplateManager::display
+        // hook (see _getUserRoles() — a 3.5 API removal did exactly that).
+        try {
+            if (!$this->getEnabled()) {
+                return false;
+            }
 
-        $menu = $templateMgr->getState('menu');
-        if (!is_array($menu)) {
-            return false;
+            /** @var TemplateManager $templateMgr */
+            $templateMgr = $args[0];
+
+            // Present only on backend (Vue) pages — setupBackendPage() builds
+            // this state. On the frontend / component AJAX it's absent.
+            $menu = $templateMgr->getState('menu');
+            if (!is_array($menu)) {
+                return false;
+            }
+
+            $request = Application::get()->getRequest();
+            $context = $request->getContext();
+            if (!$context) return false;
+
+            $user = $request->getUser();
+            if (!$user) return false;
+            $roles = $this->_getUserRoles($user, $context);
+            if (!array_intersect($roles, [ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER])) {
+                return false;
+            }
+
+            // One of the two setup entry points (the other is manage()):
+            // guarantee tables/built-ins/settings exist by the time a
+            // manager reaches any backend page. Cheap after the first pass
+            // (version-stamped) and inside this method's try/catch.
+            $this->_maybeRunSetup((int) $context->getId());
+
+            $dispatcher = $request->getDispatcher();
+            $manageUrl  = $dispatcher->url(
+                $request, ROUTE_PAGE,
+                $context->getPath(),
+                'indexingPageManager', 'indexes'
+            );
+
+            $router      = $request->getRouter();
+            $currentPage = method_exists($router, 'getRequestedPage')
+                ? $router->getRequestedPage($request)
+                : '';
+
+            // Shape matches core setupBackendPage() menu items: a flat entry
+            // keyed by identifier with name/url/isCurrent, plus an `icon`
+            // (every top-level item in the 3.5 sidebar has one — items
+            // without an icon render blank). 'Settings' is a real core icon.
+            $menu['indexingPageManager'] = [
+                'name'      => __('plugins.generic.indexingPageManager.name'),
+                'url'       => $manageUrl,
+                'icon'      => 'Settings',
+                'isCurrent' => ($currentPage === 'indexingPageManager'),
+            ];
+            $templateMgr->setState(['menu' => $menu]);
+        } catch (\Throwable $e) {
+            error_log('[indexingPageManager] addSidebarLink skipped: ' . $e->getMessage());
         }
-
-        $request = Application::get()->getRequest();
-        $context = $request->getContext();
-        if (!$context) return false;
-
-        $user = $request->getUser();
-        if (!$user) return false;
-        $roles = $this->_getUserRoles($user, $context);
-        if (!array_intersect($roles, [ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER])) {
-            return false;
-        }
-
-        $dispatcher = $request->getDispatcher();
-        $manageUrl  = $dispatcher->url(
-            $request, ROUTE_PAGE,
-            $context->getPath(),
-            'indexingPageManager', 'indexes'
-        );
-
-        $router      = $request->getRouter();
-        $currentPage = method_exists($router, 'getRequestedPage')
-            ? $router->getRequestedPage($request)
-            : '';
-
-        $menu['indexingPageManager'] = [
-            'name'      => __('plugins.generic.indexingPageManager.action.manage'),
-            'url'       => $manageUrl,
-            'isCurrent' => ($currentPage === 'indexingPageManager'),
-        ];
-        $templateMgr->setState(['menu' => $menu]);
 
         return false;
     }
@@ -505,6 +548,9 @@ class IndexingPageManagerPlugin extends GenericPlugin
      */
     public function addNavigationMenuItemTypes($hookName, $args)
     {
+        if (!$this->getEnabled()) {
+            return false;
+        }
         $types =& $args[0];
         $types[NMI_TYPE_IPM_DATABASES] = [
             'title'       => __('plugins.generic.indexingPageManager.navMenuItem.title'),
@@ -523,6 +569,9 @@ class IndexingPageManagerPlugin extends GenericPlugin
         if ($navigationMenuItem->getType() !== NMI_TYPE_IPM_DATABASES) {
             return false;
         }
+        if (!$this->getEnabled()) {
+            return false;
+        }
 
         $request = Application::get()->getRequest();
         $context = $request->getContext();
@@ -539,17 +588,68 @@ class IndexingPageManagerPlugin extends GenericPlugin
 
     /**
      * Resolve the role IDs the given user holds in the given context.
+     *
+     * OJS 3.5 removed `UserGroupDAO` — `DAORegistry::getDAO('UserGroupDAO')`
+     * now *throws* ("Unrecognized DAO UserGroupDAO"). `Repo::userGroup()
+     * ->userUserGroups($userId, $contextId)` exists on BOTH 3.4 and 3.5.
+     * The role id is read as `getRoleId()` on 3.4 (DataObject) or the
+     * `role_id` / `roleId` attribute on 3.5 (Eloquent model — no
+     * getRoleId()). Everything is wrapped so this can never throw out of a
+     * hook — worst case it returns [], which the caller reads as "no
+     * elevated roles" (link simply hidden).
+     *
+     * @return int[]
      */
     private function _getUserRoles($user, $context)
     {
         $roles = [];
-        $userGroupDao = DAORegistry::getDAO('UserGroupDAO');
-        if (!$userGroupDao) return $roles;
-        $userGroups = $userGroupDao->getByUserId($user->getId(), $context->getId());
-        while ($userGroup = $userGroups->next()) {
-            $roles[] = $userGroup->getRoleId();
+        try {
+            $userGroups = \APP\facades\Repo::userGroup()
+                ->userUserGroups((int) $user->getId(), (int) $context->getId());
+            foreach ($userGroups as $userGroup) {
+                $roleId = self::_readRoleId($userGroup);
+                if ($roleId !== null) {
+                    $roles[] = (int) $roleId;
+                }
+            }
+            return $roles;
+        } catch (\Throwable $e) {
+            // Fall through to the legacy DAO (pre-3.4 installs only).
+        }
+        try {
+            $userGroupDao = DAORegistry::getDAO('UserGroupDAO');
+            if ($userGroupDao) {
+                $userGroups = $userGroupDao->getByUserId($user->getId(), $context->getId());
+                while ($userGroup = $userGroups->next()) {
+                    $roleId = self::_readRoleId($userGroup);
+                    if ($roleId !== null) {
+                        $roles[] = (int) $roleId;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // give up — caller treats [] as "no elevated roles"
         }
         return $roles;
+    }
+
+    /**
+     * Read a role id off a UserGroup regardless of era: getRoleId() on the
+     * 3.4 DataObject, the `role_id` (or `roleId`) attribute on the 3.5
+     * Eloquent model.
+     */
+    private static function _readRoleId($userGroup)
+    {
+        if (is_object($userGroup) && method_exists($userGroup, 'getRoleId')) {
+            return $userGroup->getRoleId();
+        }
+        foreach (['roleId', 'role_id'] as $prop) {
+            $value = $userGroup->{$prop} ?? null;
+            if ($value !== null) {
+                return $value;
+            }
+        }
+        return null;
     }
 
     /**
@@ -660,6 +760,13 @@ class IndexingPageManagerPlugin extends GenericPlugin
         // Locale components are auto-loaded on demand as of OJS 3.4+; no
         // explicit AppLocale::requireComponents() call is needed (or
         // possible — the AppLocale class no longer exists).
+
+        // Ensure tables/built-ins/settings exist before any admin verb runs
+        // (cheap after the first pass — version-stamped). This is one of the
+        // two entry points that drive setup now that register() no longer
+        // does; the other is addSidebarLink().
+        $this->_maybeRunSetup();
+
         $verb = (string) $request->getUserVar('verb');
         $controller = new \APP\plugins\generic\indexingPageManager\classes\IndexingPageManagerAdminController($this);
 
@@ -696,40 +803,6 @@ class IndexingPageManagerPlugin extends GenericPlugin
         }
 
         return parent::manage($args, $request);
-    }
-
-    /**
-     * Hook: Template::Settings::website — embeds the admin UI directly on
-     * the Settings > Website page as an appended, self-contained section
-     * (confirmed pattern: PKP's own backendUiExample reference plugin
-     * calls `$output .= $templateMgr->fetch(...)` on this exact hook to add
-     * a "Setting Example" tab). Deliberately implemented as an ADDITIVE
-     * block rather than trying to register as a native jQuery-UI tab
-     * alongside Appearance/Setup/Plugins/Navigation Menus: the precise
-     * surrounding tab markup couldn't be verified against a live 3.5.0.x
-     * install before shipping this, and guessing wrong there risks
-     * breaking the *existing*, working Website settings tabs — whereas an
-     * appended section can't corrupt anything around it regardless of
-     * exactly where in the page it lands. Reuses the exact same
-     * self-contained shell built for the "Manage Indexing Page" modal (see
-     * _manageModalShellHtml()) — same CSS/JS/tab bar, no separate
-     * implementation to maintain, and no build pipeline (Vue/Vite) needed.
-     */
-    public function injectWebsiteSettingsTab($hookName, $args)
-    {
-        /** @var \APP\template\TemplateManager $templateMgr */
-        $templateMgr = $args[1];
-        $output =& $args[2];
-
-        $request = Application::get()->getRequest();
-        $controller = new \APP\plugins\generic\indexingPageManager\classes\IndexingPageManagerAdminController($this);
-        $shellHtml = $this->_manageModalShellHtml($request, $controller);
-
-        $templateMgr->assign(['ipmEmbeddedShellHtml' => $shellHtml]);
-        $output .= $templateMgr->fetch($this->getTemplateResource('admin/websiteSettingsSection.tpl'));
-
-        // Permit other plugins to keep extending this same hook.
-        return false;
     }
 
     /**
