@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
+
+<!--
+  * plugins/generic/indexingPageManager/version.xml
+  *
+  * Indexing Page Manager — generic plugin for OJS 3.4.0.x and 3.5.0.x.
+  * Developed by Litpam (https://litpam.com).
+  * Distributed under the GNU GPL v2. For full terms see the file LICENSE.
+  *
+  * Plugin version information. version.xml has no min/max-application-version
+  * field in PKP's pluginVersion.dtd (identical in 3.4 and 3.5), so
+  * compatibility is a matter of the code itself running correctly on both —
+  * see CHANGELOG.md (0.3.0) for what was verified against real pkp-lib/ojs
+  * source on both the stable-3_4_0 and stable-3_5_0 branches.
+  *
+  * lazy-load is 0 (NOT 1) on purpose. With lazy-load=1, VersionDAO::
+  * getCurrentProducts() only loads this plugin when its `enabled` setting
+  * matches the context resolved at load time — and core loads the generic
+  * category (Dispatcher::dispatch → PluginRegistry::loadCategory('generic',
+  * true)) BEFORE it can reliably resolve the journal context (it force-
+  * reloads the context on the very next line). On installs where the early
+  * context resolves to SITE, this per-journal-enabled plugin was skipped
+  * entirely, register() never ran, no hooks were added, and every custom
+  * route (/…/ipmShowcase, /gateway/plugin/ipmShowcase, /about/<slug>)
+  * 404'd with nothing in the error log. lazy-load=0 makes the plugin load
+  * on every request (the "v.lazy_load != 1" branch of that query); the
+  * real per-journal enabled check then happens inside the hook callbacks,
+  * which run after the context is resolved. See CHANGELOG.md 0.4.4.
+  -->
+<version>
+    <application>indexingPageManager</application>
+    <type>plugins.generic</type>
+    <release>0.4.4</release>
+    <date>2026-08-29</date>
+    <lazy-load>0</lazy-load>
+    <class>APP\plugins\generic\indexingPageManager\IndexingPageManagerPlugin</class>
+</version>

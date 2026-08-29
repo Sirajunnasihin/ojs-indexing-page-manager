@@ -1,0 +1,305 @@
+/* ==========================================================================
+   Indexing Page Manager — admin.css
+   Styles the index list, section list, index/section/template/settings forms
+   inside the OJS backend page chrome.
+
+   Typography is scoped under .ipm-page so plugin headings win the PKP
+   specificity war (.pkp_structure_main h3 = class+element beats a bare class).
+   ========================================================================== */
+
+/* ---- Page chrome -------------------------------------------------------- */
+
+.ipm-page {
+    --ipm-primary: #1e3a8a;
+    --ipm-primary-soft: #3b82f6;
+    --ipm-border: #e5e7eb;
+    --ipm-muted: #6b7280;
+    --ipm-text: #1f2937;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ipm-text);
+}
+
+.ipm-page .ipm-pageheading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 20px;
+}
+.ipm-page .ipm-pageheading svg {
+    width: 26px;
+    height: 26px;
+    color: var(--ipm-primary);
+    flex-shrink: 0;
+}
+.ipm-page .ipm-pageheading h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ipm-text);
+    line-height: 1.2;
+}
+
+.ipm-tabs {
+    background: #fff;
+    border: 1px solid var(--ipm-border);
+    border-radius: 8px;
+    padding: 0 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.ipm-tabs-inner { display: flex; gap: 4px; overflow-x: auto; }
+.ipm-tabs a {
+    padding: 14px 18px;
+    color: var(--ipm-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+}
+.ipm-tabs a:hover { color: var(--ipm-primary); }
+.ipm-tabs a.is-active { color: var(--ipm-primary); border-bottom-color: var(--ipm-primary); }
+
+.ipm-body { margin: 0; }
+
+.ipm-admin-footer {
+    margin-top: 32px;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--ipm-border);
+}
+.ipm-admin-footer-inner {
+    display: flex; justify-content: center; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--ipm-muted); letter-spacing: .01em;
+}
+.ipm-admin-footer-inner a {
+    color: var(--ipm-primary); text-decoration: none; font-weight: 500;
+    border-bottom: 1px dotted rgba(30,58,138,.4);
+    transition: color .15s, border-color .15s;
+}
+.ipm-admin-footer-inner a:hover { color: var(--ipm-primary-soft); border-bottom-color: var(--ipm-primary-soft); }
+
+/* ---- Toast + validation ------------------------------------------------- */
+
+.ipm-toast {
+    position: fixed; bottom: 24px; right: 24px;
+    padding: 12px 18px; border-radius: 6px; color: #fff;
+    font-size: 14px; font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .2s, transform .2s; z-index: 9999;
+}
+.ipm-toast.is-visible { opacity: 1; transform: translateY(0); }
+.ipm-toast-success { background: #16a34a; }
+.ipm-toast-error   { background: #dc2626; }
+
+/* ---- Locale fields ------------------------------------------------------ */
+
+.ipm-locale-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+.ipm-locale-cell { display: flex; flex-direction: column; gap: 6px; }
+.ipm-locale-cell input[type="text"],
+.ipm-locale-cell input[type="url"],
+.ipm-locale-cell textarea { width: 100%; box-sizing: border-box; }
+
+.ipm-multi-locale-field { margin-bottom: 18px; }
+.ipm-multi-locale-field:last-child { margin-bottom: 0; }
+.ipm-multi-locale-label { font-size: 13px; font-weight: 500; color: var(--ipm-text); margin-bottom: 8px; }
+.ipm-locale-cell-badge { display: inline-flex; align-items: center; gap: 6px; }
+.ipm-multi-locale-field .ipm-locale-cell {
+    background: #fafbfc; border: 1px solid var(--ipm-border);
+    border-radius: 6px; padding: 10px 12px; gap: 6px;
+}
+.ipm-multi-locale-field .ipm-locale-cell:focus-within { border-color: var(--ipm-primary); background: #fff; }
+.ipm-multi-locale-field textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+
+.ipm-locale-label { display: flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 6px; }
+.ipm-locale-badge {
+    display: inline-block; padding: 2px 9px; background: var(--ipm-primary); color: #fff;
+    font-size: 11px; font-weight: 600; border-radius: 3px; letter-spacing: .02em;
+}
+.ipm-required { color: #dc2626; font-weight: 700; }
+
+/* ---- Admin list shell --------------------------------------------------- */
+
+.ipm-admin {
+    color: #1a2332;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px; line-height: 1.5;
+}
+.ipm-admin-toolbar {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1.25rem; gap: 12px; flex-wrap: wrap;
+}
+.ipm-admin-title { font-size: 18px; font-weight: 500; margin: 0 0 4px; }
+.ipm-admin-subtitle { font-size: 12px; color: #6b7280; }
+.ipm-admin-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* ---- Buttons ------------------------------------------------------------ */
+
+.ipm-btn {
+    padding: 7px 12px; font-size: 12px; border: 1px solid #d1d5db; background: #fff;
+    border-radius: 5px; color: #374151; cursor: pointer; line-height: 1.2;
+    transition: background .12s ease, border-color .12s ease; text-decoration: none; display: inline-block;
+}
+.ipm-btn:hover:not(:disabled) { background: #f9fafb; }
+.ipm-btn:disabled { opacity: .5; cursor: not-allowed; }
+.ipm-btn-primary { background: #1e3a5f; color: #fff; border-color: #1e3a5f; font-weight: 500; }
+.ipm-btn-primary:hover:not(:disabled) { background: #16304f; }
+.ipm-btn-danger { color: #b91c1c; border-color: transparent; }
+.ipm-btn-danger:hover:not(:disabled) { background: #fef2f2; border-color: #fecaca; }
+.ipm-btn-small { padding: 4px 8px; font-size: 11px; }
+.ipm-btn-block { display: block; width: 100%; margin-bottom: 6px; text-align: center; }
+
+/* ---- Stats -------------------------------------------------------------- */
+
+.ipm-admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+.ipm-stat-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 14px; }
+.ipm-stat-label { font-size: 10px; color: #6b7280; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
+.ipm-stat-value { font-size: 20px; font-weight: 500; color: #1a2332; }
+.ipm-stat-value-small { font-size: 13px; font-weight: 500; }
+.ipm-stat-success { color: #16a34a; }
+.ipm-stat-suffix { font-size: 11px; color: #6b7280; font-weight: 400; }
+@media (max-width: 720px) { .ipm-admin-stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---- Empty state -------------------------------------------------------- */
+
+.ipm-admin-empty { background: #fff; border: 1px dashed #d1d5db; border-radius: 8px; padding: 2rem; text-align: center; }
+.ipm-admin-empty-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.ipm-admin-empty-body { font-size: 12px; color: #6b7280; margin-bottom: 1rem; }
+
+/* ---- Sections + rows ---------------------------------------------------- */
+
+.ipm-admin-sections { display: flex; flex-direction: column; gap: 10px; }
+.ipm-admin-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+.ipm-admin-section-header {
+    display: flex; align-items: center; padding: 10px 14px; background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb; gap: 8px; flex-wrap: wrap;
+}
+.ipm-admin-drag { cursor: grab; color: #9ca3af; user-select: none; flex-shrink: 0; line-height: 1; }
+.ipm-admin-drag:active { cursor: grabbing; }
+.ipm-admin-section-name { font-size: 13px; font-weight: 500; color: #1a2332; }
+.ipm-admin-section-name.is-inactive { color: #9ca3af; text-decoration: line-through; }
+
+.ipm-admin-badge { font-size: 10px; padding: 1px 7px; border-radius: 10px; letter-spacing: .04em; text-transform: uppercase; font-weight: 500; }
+.ipm-admin-badge-count   { background: #1e3a5f; color: #fff; }
+.ipm-admin-badge-builtin { background: #ecfdf5; color: #166534; }
+.ipm-admin-badge-custom  { background: #ede9fe; color: #5b21b6; }
+.ipm-admin-badge-warn    { background: #fef3c7; color: #92400e; }
+
+.ipm-admin-slug-hint {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px; border-radius: 50%; background: #f3f4f6; color: #9ca3af;
+    font-size: 9px; font-weight: 600; font-style: italic; cursor: help; user-select: none;
+    transition: background-color .15s, color .15s;
+}
+.ipm-admin-slug-hint:hover, .ipm-admin-slug-hint:focus { background: #e0e7ff; color: #1e3a8a; outline: none; }
+
+.ipm-admin-add-to-sec { margin-left: auto; }
+.ipm-admin-section-empty { padding: 12px 16px; color: #6b7280; font-size: 12px; font-style: italic; }
+
+.ipm-admin-rows { display: flex; flex-direction: column; }
+.ipm-admin-row { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid #f3f4f6; gap: 12px; }
+.ipm-admin-row:last-child { border-bottom: 0; }
+.ipm-admin-row.is-inactive { opacity: .55; }
+
+.ipm-admin-thumb {
+    width: 64px; height: 32px; border-radius: 4px; overflow: hidden; flex-shrink: 0;
+    background: #f0f4f8; display: flex; align-items: center; justify-content: center;
+}
+.ipm-admin-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
+.ipm-admin-thumb-empty { color: #cbd5e1; font-size: 13px; }
+
+.ipm-admin-rowmeta { flex: 1; min-width: 0; }
+.ipm-admin-rowname { font-size: 13px; font-weight: 500; color: #1a2332; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ipm-admin-rowsub { font-size: 11px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ipm-admin-rowactions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+
+/* ---- Toggle switch ------------------------------------------------------ */
+
+.ipm-toggle {
+    width: 30px; height: 16px; background: #d1d5db; border-radius: 10px; position: relative;
+    cursor: pointer; border: 0; padding: 0; transition: background .12s ease; flex-shrink: 0;
+}
+.ipm-toggle.is-active { background: #16a34a; }
+.ipm-toggle-knob { position: absolute; left: 2px; top: 2px; width: 12px; height: 12px; background: #fff; border-radius: 50%; transition: transform .12s ease; }
+.ipm-toggle.is-active .ipm-toggle-knob { transform: translateX(14px); }
+
+/* ---- Forms -------------------------------------------------------------- */
+
+.ipm-form { padding: 4px; }
+.ipm-page .ipm-form-header h2 { font-size: 18px; font-weight: 500; margin: 0 0 1rem; }
+.ipm-form-grid { display: grid; grid-template-columns: 280px 1fr; gap: 1rem; }
+@media (max-width: 800px) { .ipm-form-grid { grid-template-columns: 1fr; } }
+.ipm-form-side, .ipm-form-main { display: flex; flex-direction: column; gap: 10px; }
+
+.ipm-form-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem 1.25rem; }
+.ipm-form-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 10px; border-bottom: 1px solid #f3f4f6; gap: 12px; flex-wrap: wrap; }
+.ipm-page .ipm-form-card-title { font-size: 13px; font-weight: 500; color: #1a2332; }
+.ipm-form-card-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
+.ipm-page .ipm-form-section-label { font-size: 10px; color: #6b7280; letter-spacing: .05em; text-transform: uppercase; font-weight: 500; margin: 0 0 10px; }
+
+.ipm-form-field { margin-bottom: 12px; }
+.ipm-form-field:last-child { margin-bottom: 0; }
+.ipm-form-field label { display: block; font-size: 11px; color: #4b5563; margin-bottom: 4px; font-weight: 500; }
+.ipm-form-field input[type=text],
+.ipm-form-field input[type=url],
+.ipm-form-field textarea,
+.ipm-form-field select {
+    width: 100%; padding: 7px 10px; font-size: 13px; border: 1px solid #d1d5db;
+    border-radius: 5px; box-sizing: border-box; color: #1a2332; background: #fff; font-family: inherit;
+}
+.ipm-form-field textarea { min-height: 60px; resize: vertical; }
+.ipm-form-field input:focus, .ipm-form-field textarea:focus, .ipm-form-field select:focus { border-color: #1e3a5f; outline: none; }
+.ipm-form-help { font-size: 10px; color: #6b7280; margin-top: 4px; }
+.ipm-form-buttons { margin-top: 1rem; display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ---- Checkbox + radio rows --------------------------------------------- */
+
+.ipm-checkbox-row {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fff;
+    border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 6px; font-size: 12px; color: #4b5563; cursor: pointer;
+}
+.ipm-checkbox-row.is-selected, .ipm-checkbox-row:has(input:checked) { background: #f0f4f8; border-color: #cbd5e1; color: #1e3a5f; font-weight: 500; }
+.ipm-form-tag { margin-left: auto; font-size: 9px; background: #ecfdf5; color: #166534; padding: 1px 6px; border-radius: 8px; letter-spacing: .04em; text-transform: uppercase; }
+
+.ipm-radio-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.ipm-radio { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; font-size: 12px; color: #374151; background: #fff; }
+.ipm-radio:has(input:checked) { border-color: #1e3a5f; background: #f0f4f8; color: #1e3a5f; font-weight: 500; }
+
+/* ---- Logo preview (landscape) ------------------------------------------ */
+
+.ipm-logo-preview {
+    margin-bottom: 10px; border-radius: 8px; overflow: hidden; background: #f9fafb;
+    aspect-ratio: 8 / 3; display: flex; align-items: center; justify-content: center; padding: 10px; box-sizing: border-box;
+}
+.ipm-logo-preview img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.ipm-logo-placeholder { color: #9ca3af; font-size: 12px; }
+
+/* ---- Template selector cards ------------------------------------------- */
+
+.ipm-template-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 1rem 0; }
+@media (max-width: 600px) { .ipm-template-grid { grid-template-columns: 1fr; } }
+.ipm-template-card { border: 2px solid #e5e7eb; border-radius: 8px; padding: 14px; cursor: pointer; background: #fff; transition: border-color .12s ease; }
+.ipm-template-card:hover { border-color: #cbd5e1; }
+.ipm-template-card.is-selected, .ipm-template-card:has(input:checked) { border-color: #1e3a5f; background: #f0f4f8; }
+.ipm-template-card input[type=radio] { margin-right: 6px; }
+.ipm-template-card-thumb { aspect-ratio: 16 / 9; margin-bottom: 10px; border-radius: 6px; overflow: hidden; background: #f8f9fb; display: block; border: 1px solid #e5e7eb; }
+.ipm-template-card-thumb svg { width: 100%; height: 100%; display: block; }
+.ipm-template-card-name { font-size: 13px; font-weight: 500; color: #1a2332; margin-bottom: 4px; }
+.ipm-template-card-desc { font-size: 11px; color: #6b7280; }
+
+/* ---- Status grid -------------------------------------------------------- */
+
+.ipm-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.ipm-status-item { background: #fafbfc; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; }
+.ipm-status-label { font-size: 10px; color: #6b7280; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+.ipm-status-value { font-size: 13px; color: #1a2332; word-break: break-all; }
+.ipm-status-on { color: #16a34a; font-weight: 500; }
+.ipm-status-note { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.4; }
+.ipm-status-link { color: #1e3a8a; text-decoration: none; border-bottom: 1px dotted rgba(30,58,138,.4); }
+.ipm-status-link:hover { color: #1d4ed8; }

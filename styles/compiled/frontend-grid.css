@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Indexing Page Manager — frontend-grid.css
+   The responsive logo grid + index tiles.
+
+   Each card is a fixed light tile so logos (often dark-on-transparent) stay
+   legible in light AND dark mode. Because the tile background is always light,
+   the captions on it use an explicit dark colour rather than inheriting the
+   theme text — otherwise, in a theme's dark mode the inherited text turns light
+   and disappears on the white tile. Column count is admin-controlled via the
+   --ipm-cols custom property; mobile clamps to 2 (<640px) then 1 (<420px).
+   ========================================================================== */
+
+.ipm-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ipm-cols, 4), minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.ipm-card {
+    display: flex;
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
+}
+.ipm-card:hover { border-color: rgba(0, 0, 0, .14); box-shadow: 0 6px 18px rgba(0, 0, 0, .07); transform: translateY(-2px); }
+
+/* Keyboard focus must be at least as obvious as the hover state (WCAG 2.4.7).
+   The card link carries no text decoration, and `.ipm-card` sets
+   `overflow: hidden` — which would clip an outline drawn on the inner <a> — so
+   the focus ring is drawn on the CARD itself via :focus-within (an element's
+   own outline is not clipped by its own overflow). The ring uses an explicit
+   high-contrast colour because the tile is a fixed light surface on every
+   theme, incl. dark mode. :focus-visible keeps the ring keyboard-only; the
+   plain :focus rule is the fallback for engines without :focus-visible. */
+.ipm-card:focus-within {
+    border-color: rgba(0, 0, 0, .14);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .07);
+    transform: translateY(-2px);
+    outline: 3px solid var(--ipm-accent, #1e3a8a);
+    outline-offset: 2px;
+}
+.ipm-card:has(.ipm-card-link:focus:not(:focus-visible)) { outline: none; }
+@media (prefers-contrast: more), (forced-colors: active) {
+    .ipm-card:focus-within { outline-width: 4px; }
+}
+
+.ipm-card-link {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: .6rem; width: 100%; padding: 1.25rem 1rem;
+    text-decoration: none; color: #1f2937;
+}
+/* Fallback for engines without :has(): the card-level ring above can't be
+   suppressed for mouse focus there, so instead skip it on the card and draw an
+   inset ring on the link itself (inset so `.ipm-card`'s overflow:hidden can't
+   clip it). Engines WITH :has() ignore this block, avoiding a doubled ring. */
+@supports not (selector(:has(*))) {
+    .ipm-card:focus-within { outline: none; }
+    .ipm-card-link:focus-visible { outline: 3px solid var(--ipm-accent, #1e3a8a); outline-offset: -3px; }
+}
+.ipm-card-link--static { cursor: default; }
+
+.ipm-card-logo { display: flex; align-items: center; justify-content: center; width: 100%; height: 64px; }
+/* Logos render in their own colours; the card's hover shadow/lift is the only
+   effect (no grayscale). */
+.ipm-card-logo-img {
+    max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;
+}
+
+.ipm-card-logo-fallback {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    width: 100%; height: 100%; padding: 0 .4rem; box-sizing: border-box;
+    font-size: .95rem; font-weight: 600; color: #374151; line-height: 1.2;
+}
+
+/* Captions use explicit colours readable on the fixed light tile in any theme /
+   mode (see header note). */
+.ipm-card-name { font-size: .9rem; font-weight: 600; text-align: center; line-height: 1.3; color: #1f2937; }
+.ipm-card-desc { font-size: .78rem; text-align: center; line-height: 1.45; color: #4b5563; }
+
+/* Logo-only grid can breathe a touch more. */
+.ipm-grid--logos .ipm-card-link { padding: 1.4rem 1rem; }
+.ipm-grid--logos .ipm-card-logo { height: 58px; }
+
+@media (max-width: 640px) { .ipm-grid { --ipm-cols: 2 !important; gap: .75rem; } }
+@media (max-width: 420px) { .ipm-grid { --ipm-cols: 1 !important; } }

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "../../../lib/pkp/dtd/xmlSchema.dtd">
+
+<!--
+  * plugins/generic/indexingPageManager/install.xml
+  *
+  * Indexing Page Manager — DB schema (ADOdb XMLSchema format).
+  * Developed by Litpam (https://litpam.com).
+  * NOTE: OJS generic plugins create their schema via the Laravel-style
+  * migration in IndexingPageManagerSchemaMigration; this file is retained
+  * as human-readable documentation of the table layout only and is not
+  * consulted by the installer.
+  * Distributed under the GNU GPL v2. For full terms see the file LICENSE.
+  -->
+<schema version="0.2">
+
+    <!-- Indexes -->
+    <table name="ipm_indexes">
+        <field name="index_id" type="I8">
+            <KEY/>
+            <AUTOINCREMENT/>
+        </field>
+        <field name="journal_id" type="I8">
+            <NOTNULL/>
+        </field>
+        <field name="logo_path" type="C2" size="255"/>
+        <field name="url" type="C2" size="500"/>
+        <field name="is_active" type="I1">
+            <NOTNULL/>
+            <DEFAULT VALUE="1"/>
+        </field>
+        <field name="created_at" type="T">
+            <NOTNULL/>
+        </field>
+        <field name="updated_at" type="T">
+            <NOTNULL/>
+        </field>
+        <descr>Indexing Page Manager — main index records</descr>
+        <index name="ipm_index_journal">
+            <col>journal_id</col>
+        </index>
+        <index name="ipm_index_active">
+            <col>journal_id</col>
+            <col>is_active</col>
+        </index>
+    </table>
+
+    <!-- Index settings (multilingual: name, description) -->
+    <table name="ipm_index_settings">
+        <field name="index_id" type="I8">
+            <NOTNULL/>
+        </field>
+        <field name="locale" type="C2" size="14">
+            <NOTNULL/>
+            <DEFAULT VALUE=""/>
+        </field>
+        <field name="setting_name" type="C2" size="255">
+            <NOTNULL/>
+        </field>
+        <field name="setting_value" type="X"/>
+        <descr>Indexing Page Manager — index multilingual settings</descr>
+        <index name="ipm_index_settings_pkey">
+            <UNIQUE/>
+            <col>index_id</col>
+            <col>locale</col>
+            <col>setting_name</col>
+        </index>
+        <index name="ipm_index_settings_index">
+            <col>index_id</col>
+        </index>
+    </table>
+
+    <!-- Sections -->
+    <table name="ipm_sections">
+        <field name="section_id" type="I8">
+            <KEY/>
+            <AUTOINCREMENT/>
+        </field>
+        <field name="journal_id" type="I8">
+            <NOTNULL/>
+        </field>
+        <field name="slug" type="C2" size="100">
+            <NOTNULL/>
+        </field>
+        <field name="is_built_in" type="I1">
+            <NOTNULL/>
+            <DEFAULT VALUE="0"/>
+        </field>
+        <field name="is_active" type="I1">
+            <NOTNULL/>
+            <DEFAULT VALUE="1"/>
+        </field>
+        <field name="seq" type="I4">
+            <NOTNULL/>
+            <DEFAULT VALUE="0"/>
+        </field>
+        <field name="created_at" type="T">
+            <NOTNULL/>
+        </field>
+        <descr>Indexing Page Manager — sections</descr>
+        <index name="ipm_section_journal_slug">
+            <UNIQUE/>
+            <col>journal_id</col>
+            <col>slug</col>
+        </index>
+        <index name="ipm_section_journal_seq">
+            <col>journal_id</col>
+            <col>seq</col>
+        </index>
+    </table>
+
+    <!-- Section settings (multilingual display name) -->
+    <table name="ipm_section_settings">
+        <field name="section_id" type="I8">
+            <NOTNULL/>
+        </field>
+        <field name="locale" type="C2" size="14">
+            <NOTNULL/>
+            <DEFAULT VALUE=""/>
+        </field>
+        <field name="setting_name" type="C2" size="255">
+            <NOTNULL/>
+        </field>
+        <field name="setting_value" type="X"/>
+        <descr>Indexing Page Manager — section multilingual settings</descr>
+        <index name="ipm_section_settings_pkey">
+            <UNIQUE/>
+            <col>section_id</col>
+            <col>locale</col>
+            <col>setting_name</col>
+        </index>
+        <index name="ipm_section_settings_section">
+            <col>section_id</col>
+        </index>
+    </table>
+
+    <!-- Pivot table (many-to-many index<->section) -->
+    <table name="ipm_index_section">
+        <field name="index_id" type="I8">
+            <NOTNULL/>
+        </field>
+        <field name="section_id" type="I8">
+            <NOTNULL/>
+        </field>
+        <field name="seq" type="I4">
+            <NOTNULL/>
+            <DEFAULT VALUE="0"/>
+        </field>
+        <descr>Indexing Page Manager — index/section pivot</descr>
+        <index name="ipm_index_section_pkey">
+            <UNIQUE/>
+            <col>index_id</col>
+            <col>section_id</col>
+        </index>
+        <index name="ipm_index_section_sec_seq">
+            <col>section_id</col>
+            <col>seq</col>
+        </index>
+    </table>
+
+</schema>

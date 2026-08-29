@@ -1,0 +1,383 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Indexing Page Manager 0.1.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-06-15T00:00:00+00:00\n"
+"Language-Team: en_US <translate@litpam.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Plugin metadata --------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.name"
+msgstr "Indexing Page Manager"
+
+msgid "plugins.generic.indexingPageManager.description"
+msgstr "A modern showcase of the indexing databases, discovery services and publishing platforms your journal works with — managed from a single admin panel, displayed on a dedicated page or embedded in your theme."
+
+msgid "plugins.generic.indexingPageManager.action.manage"
+msgstr "Manage Indexing Page"
+
+# Navigation menu integration --------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.navMenuItem.title"
+msgstr "Indexes & Databases page"
+
+msgid "plugins.generic.indexingPageManager.navMenuItem.description"
+msgstr "Links to the Indexing Page Manager showcase of the databases and platforms your journal is indexed in."
+
+# Frontend ---------------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.frontend.defaultTitle"
+msgstr "Indexes & Databases"
+
+# Built-in sections (slugs immutable; labels editable per locale) ---------
+
+msgid "plugins.generic.indexingPageManager.builtIn.indexing-and-abstracting"
+msgstr "Indexing & Abstracting"
+
+msgid "plugins.generic.indexingPageManager.builtIn.discovery-and-search"
+msgstr "Discovery & Search"
+
+msgid "plugins.generic.indexingPageManager.builtIn.identifiers-and-registration"
+msgstr "Identifiers & Registration"
+
+msgid "plugins.generic.indexingPageManager.builtIn.archiving-and-preservation"
+msgstr "Archiving & Preservation"
+
+# Display template + columns ---------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate"
+msgstr "Display template"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logos"
+msgstr "Logo only"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logos.desc"
+msgstr "A clean grid of equal-size logo tiles, no captions."
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name"
+msgstr "Logo + name"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name.desc"
+msgstr "Each logo tile shows the index name beneath it."
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name-desc"
+msgstr "Logo + name + description"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name-desc.desc"
+msgstr "Logo, the index name, and a short description line."
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-desc"
+msgstr "Logo + description"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-desc.desc"
+msgstr "Logo with a short description, no name caption."
+
+msgid "plugins.generic.indexingPageManager.settings.displayColumns"
+msgstr "Columns"
+
+msgid "plugins.generic.indexingPageManager.settings.displayColumnsHelp"
+msgstr "Logos auto-scale to fit. On small screens the grid collapses to fewer columns automatically."
+
+msgid "plugins.generic.indexingPageManager.template.error.invalid"
+msgstr "Please choose one of the available templates."
+
+# Settings page ----------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.settings.title"
+msgstr "Indexing Page Manager — Settings"
+
+msgid "plugins.generic.indexingPageManager.settings.section.page"
+msgstr "Page"
+
+msgid "plugins.generic.indexingPageManager.settings.section.display"
+msgstr "Display"
+
+msgid "plugins.generic.indexingPageManager.settings.section.seo"
+msgstr "SEO"
+
+msgid "plugins.generic.indexingPageManager.settings.pageTitle"
+msgstr "Page heading"
+
+msgid "plugins.generic.indexingPageManager.settings.introText"
+msgstr "Intro text (shown under the heading)"
+
+msgid "plugins.generic.indexingPageManager.settings.pageSlug"
+msgstr "URL slug"
+
+msgid "plugins.generic.indexingPageManager.settings.pageSlugHelp"
+msgstr "The page is mounted at /about/<slug>. Default: databases."
+
+msgid "plugins.generic.indexingPageManager.settings.error.pageSlug"
+msgstr "Slug must start with a letter and contain only letters, digits and hyphens."
+
+msgid "plugins.generic.indexingPageManager.settings.error.pageSlugReserved"
+msgstr "This slug is reserved by the journal's built-in About page (contact, submissions, etc.) and cannot be used here."
+
+msgid "plugins.generic.indexingPageManager.settings.enableSchemaOrg"
+msgstr "Embed Schema.org JSON-LD for SEO"
+
+msgid "plugins.generic.indexingPageManager.settings.enableSchemaOrgHelp"
+msgstr "Adds a structured-data script (CollectionPage of Organization entries) that helps search engines understand which databases index your journal."
+
+msgid "plugins.generic.indexingPageManager.settings.status.heading"
+msgstr "Plugin status"
+
+msgid "plugins.generic.indexingPageManager.settings.status.activation"
+msgstr "Activation"
+
+msgid "plugins.generic.indexingPageManager.settings.status.enabled"
+msgstr "Enabled"
+
+msgid "plugins.generic.indexingPageManager.settings.status.toggleHint"
+msgstr "Use Settings → Website → Plugins to disable or re-enable."
+
+msgid "plugins.generic.indexingPageManager.settings.status.publicUrl"
+msgstr "Public page"
+
+msgid "plugins.generic.indexingPageManager.settings.status.routeNote"
+msgstr "While the plugin is enabled this URL shows your showcase. You can also add it to any navigation menu via Settings → Website → Navigation Menus."
+
+# Admin — index list -----------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.title"
+msgstr "Indexes & Databases"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.subtitle"
+msgstr "Curate the databases, discovery services and platforms your journal works with."
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.preview"
+msgstr "Preview"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.addIndex"
+msgstr "Add Index"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.addToThis"
+msgstr "Add to this section"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.toggleActive"
+msgstr "Toggle active state"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.dragSection"
+msgstr "Drag to reorder section"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.dragIndex"
+msgstr "Drag to reorder index"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.sectionEmpty"
+msgstr "No indexes in this section yet."
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.empty.title"
+msgstr "No indexes yet"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.empty.body"
+msgstr "Get started by adding your first indexing database."
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.total"
+msgstr "Total Indexes"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.active"
+msgstr "Active"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.sections"
+msgstr "Populated sections"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.template"
+msgstr "Active template"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.cols"
+msgstr "cols"
+
+# Admin — index form -----------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.title"
+msgstr "Index"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.addTitle"
+msgstr "Add Index"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.editTitle"
+msgstr "Edit Index"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.saved"
+msgstr "Index saved."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logo"
+msgstr "Logo"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoChoose"
+msgstr "Choose logo"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoRemove"
+msgstr "Remove logo"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoPlaceholder"
+msgstr "No logo uploaded"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoHelp"
+msgstr "Recommended: a landscape logo around 400×150 px and under ~100 KB. Keeping all logos the same size looks tidier and helps the page load faster. A transparent-background PNG looks best; JPG, PNG or WebP accepted."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.status"
+msgstr "Status"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.isActive"
+msgstr "Active (visible on the public page)"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.isActiveHelp"
+msgstr "Inactive entries stay in the database but are not rendered on the frontend."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.sections"
+msgstr "Sections"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.details"
+msgstr "Index details"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.detailsHelp"
+msgstr "Multilingual fields — fill in for each language. Most index names are brand names that read the same in every language."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.name"
+msgstr "Name"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.description"
+msgstr "Short description (optional)"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.descriptionHelp"
+msgstr "Shown beneath the logo when the \"Logos + names\" template is active. Plain text; HTML is stripped."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.link"
+msgstr "External link"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.url"
+msgstr "URL"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.urlHelp"
+msgstr "Link to the index's own website. Must start with http:// or https://."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.error.name"
+msgstr "Name is required for at least the primary language."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.error.sections"
+msgstr "Choose at least one section."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.error.url"
+msgstr "Enter a full URL starting with http:// or https://."
+
+# Admin — sections -------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.sections.title"
+msgstr "Sections"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.subtitle"
+msgstr "Built-in sections cannot be deleted but can be renamed, reordered or hidden."
+
+msgid "plugins.generic.indexingPageManager.admin.sections.backToIndexes"
+msgstr "Back to indexes"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.addSection"
+msgstr "Add Section"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.builtIn"
+msgstr "Built-in"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.custom"
+msgstr "Custom"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.inactive"
+msgstr "Hidden"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.empty.title"
+msgstr "No sections yet."
+
+msgid "plugins.generic.indexingPageManager.admin.sections.error.cannotDeleteBuiltIn"
+msgstr "Built-in sections cannot be deleted. Toggle them inactive to hide instead."
+
+# Admin — section form ---------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.title"
+msgstr "Section"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.addTitle"
+msgstr "Add Section"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.editTitle"
+msgstr "Edit Section"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.saved"
+msgstr "Section saved."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.displayName"
+msgstr "Display name"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.displayNameHelp"
+msgstr "What readers see as the section heading. Translate per locale."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.isActive"
+msgstr "Active"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.isActiveHelp"
+msgstr "Inactive sections are hidden on the public page even if they contain indexes."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.error.displayName"
+msgstr "Display name is required for at least the primary language."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.error.slug"
+msgstr "Could not derive an identifier from the display name. Please enter a display name first."
+
+# Admin — template selector ----------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.templates.title"
+msgstr "Template"
+
+msgid "plugins.generic.indexingPageManager.admin.templateSelector.title"
+msgstr "Choose a display template"
+
+msgid "plugins.generic.indexingPageManager.admin.templateSelector.help"
+msgstr "Pick the layout your readers will see, and how many columns of logos to show. You can change this any time."
+
+# Admin — shared ---------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.formError"
+msgstr "Please correct the highlighted fields and try again."
+
+msgid "plugins.generic.indexingPageManager.admin.footer.developedBy"
+msgstr "Developed by"
+
+msgid "plugins.generic.indexingPageManager.admin.js.requestFailed"
+msgstr "Request failed. Please try again."
+
+msgid "plugins.generic.indexingPageManager.admin.js.deleteIndexConfirm"
+msgstr "Delete \"{$name}\"? This cannot be undone."
+
+msgid "plugins.generic.indexingPageManager.admin.js.deleteSectionConfirm"
+msgstr "Delete section \"{$name}\"? Indexes in this section remain but lose this assignment."
+
+msgid "plugins.generic.indexingPageManager.admin.js.logoUploadFailed"
+msgstr "Logo upload failed. Please try again."
+
+msgid "plugins.generic.indexingPageManager.admin.js.saving"
+msgstr "Saving…"
+
+msgid "plugins.generic.indexingPageManager.admin.js.saved"
+msgstr "Saved."
+
+msgid "plugins.generic.indexingPageManager.admin.js.saveFailed"
+msgstr "Save failed. Please try again."
+
+msgid "plugins.generic.indexingPageManager.admin.js.networkError"
+msgstr "Network error. Please try again."
+
+msgid "plugins.generic.indexingPageManager.admin.error.invalidRequest"
+msgstr "Your session has expired or the request was invalid. Please reload the page and try again."
+
+msgid "plugins.generic.indexingPageManager.admin.tabs.ariaLabel"
+msgstr "Indexing Page sections"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.slugLabel"
+msgstr "Section slug: {$slug}"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.toggleActive"
+msgstr "Toggle active state"

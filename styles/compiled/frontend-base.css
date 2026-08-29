@@ -1,0 +1,75 @@
+/* ==========================================================================
+   Indexing Page Manager — frontend-base.css
+
+   Deliberately minimal and theme-respecting: the plugin does NOT set a page or
+   body background, font-family, text colour, or its own page "card". The
+   showcase inherits the active theme's page chrome (Atlas/Nivo/etc., incl. dark
+   mode). We only style the optional intro line and the collapsible section
+   chrome — using inherited colour + translucent borders so it adapts to any
+   theme. Brand accent (the count badge) uses --ipm-accent with a safe default.
+   ========================================================================== */
+
+/* Respect the theme's content width: constrain + centre the showcase like the
+   theme constrains its own header/footer rows, WITHOUT imposing a background,
+   card, font or colour. The max-width is a CSS variable so a theme/admin can
+   tune it; the default (1280px) matches the common OJS content width, and the
+   container can never exceed its parent, so narrower themes still cap it. The
+   side padding mirrors a typical theme gutter so our edges line up with the
+   masthead. */
+.ipm-page {
+    width: 100%;
+    max-width: var(--ipm-max-width, 1280px);
+    margin-left: auto;
+    margin-right: auto;
+    /* Top/bottom padding gives the header breathing room from the theme's
+       masthead (no more title "stuck to the top") and clears the grid at the
+       end; sides mirror a typical theme gutter so our edges line up. */
+    padding: clamp(20px, 3.5vw, 36px) clamp(16px, 4vw, 32px) clamp(28px, 4vw, 48px);
+    box-sizing: border-box;
+}
+
+/* The page heading + intro are OUR content (the page body is the plugin's own
+   space). To look tidy and consistent under ANY theme's masthead, we centre the
+   header and own its vertical rhythm — while still INHERITING the active theme's
+   font, size, weight and colour for the <h1> (we set only alignment + margins).
+   Normal specificity so this wins over a theme's left-aligned content-h1
+   default, but we never touch the typography the theme provides. */
+.ipm-page .ipm-page-title {
+    text-align: center;
+    margin: 0 0 1rem;
+}
+
+.ipm-page .ipm-page-intro {
+    text-align: center;
+    max-width: 64ch;
+    margin: 0 auto 2rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: .82;
+}
+
+/* ---- Sections (always shown in full; no collapse/expand) --------------- */
+
+.ipm-collection { display: flex; flex-direction: column; gap: 1.9rem; }
+
+.ipm-section { border: 0; margin: 0; }
+
+.ipm-section-header {
+    display: flex; align-items: center; gap: .6rem;
+    margin: 0 0 1.05rem; padding: 0 0 .55rem;
+    border-bottom: 1px solid rgba(127, 127, 127, .22);
+}
+
+.ipm-page .ipm-section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+    color: inherit;          /* follow the theme's heading colour */
+    letter-spacing: -.01em;
+}
+.ipm-section-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 1.45em; height: 1.45em; padding: 0 .5em;
+    font-size: .72rem; font-weight: 600; line-height: 1;
+    color: #fff; background: var(--ipm-accent, #1e3a8a); border-radius: 1em;
+}

@@ -1,0 +1,383 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Indexing Page Manager 0.1.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-15T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-06-15T00:00:00+00:00\n"
+"Language-Team: tr_TR <translate@litpam.com>\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Plugin metadata --------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.name"
+msgstr "Dizinleme Sayfası Yöneticisi"
+
+msgid "plugins.generic.indexingPageManager.description"
+msgstr "Derginizin yer aldığı dizinleme veritabanlarının, keşif servislerinin ve yayıncılık platformlarının modern bir vitrini — tek bir yönetim panelinden yönetilir, özel bir sayfada gösterilir veya temanıza gömülür."
+
+msgid "plugins.generic.indexingPageManager.action.manage"
+msgstr "Dizinleme Sayfasını Yönet"
+
+# Navigation menu integration --------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.navMenuItem.title"
+msgstr "İndeksler ve Veritabanları sayfası"
+
+msgid "plugins.generic.indexingPageManager.navMenuItem.description"
+msgstr "Derginizin dizinlendiği veritabanları ve platformları gösteren Dizinleme Sayfası vitrinine bağlanır."
+
+# Frontend ---------------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.frontend.defaultTitle"
+msgstr "İndeksler ve Veritabanları"
+
+# Built-in sections ------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.builtIn.indexing-and-abstracting"
+msgstr "Dizinleme ve Özetleme"
+
+msgid "plugins.generic.indexingPageManager.builtIn.discovery-and-search"
+msgstr "Keşif ve Arama"
+
+msgid "plugins.generic.indexingPageManager.builtIn.identifiers-and-registration"
+msgstr "Tanımlayıcılar ve Kayıt"
+
+msgid "plugins.generic.indexingPageManager.builtIn.archiving-and-preservation"
+msgstr "Arşivleme ve Koruma"
+
+# Display template + columns ---------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate"
+msgstr "Görünüm şablonu"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logos"
+msgstr "Yalnızca logo"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logos.desc"
+msgstr "Eşit boyutlu logo kutucuklarından oluşan sade bir ızgara, başlık yok."
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name"
+msgstr "Logo + ad"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name.desc"
+msgstr "Her logo kutucuğunun altında indeks adı gösterilir."
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name-desc"
+msgstr "Logo + ad + açıklama"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-name-desc.desc"
+msgstr "Logo, indeks adı ve kısa bir açıklama satırı."
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-desc"
+msgstr "Logo + açıklama"
+
+msgid "plugins.generic.indexingPageManager.settings.displayTemplate.logo-desc.desc"
+msgstr "Ad olmadan, logo ve kısa açıklama."
+
+msgid "plugins.generic.indexingPageManager.settings.displayColumns"
+msgstr "Sütun sayısı"
+
+msgid "plugins.generic.indexingPageManager.settings.displayColumnsHelp"
+msgstr "Logolar otomatik olarak ölçeklenir. Küçük ekranlarda ızgara otomatik olarak daha az sütuna iner."
+
+msgid "plugins.generic.indexingPageManager.template.error.invalid"
+msgstr "Lütfen mevcut şablonlardan birini seçin."
+
+# Settings page ----------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.settings.title"
+msgstr "Dizinleme Sayfası Yöneticisi — Ayarlar"
+
+msgid "plugins.generic.indexingPageManager.settings.section.page"
+msgstr "Sayfa"
+
+msgid "plugins.generic.indexingPageManager.settings.section.display"
+msgstr "Görünüm"
+
+msgid "plugins.generic.indexingPageManager.settings.section.seo"
+msgstr "SEO"
+
+msgid "plugins.generic.indexingPageManager.settings.pageTitle"
+msgstr "Sayfa başlığı"
+
+msgid "plugins.generic.indexingPageManager.settings.introText"
+msgstr "Giriş metni (başlığın altında gösterilir)"
+
+msgid "plugins.generic.indexingPageManager.settings.pageSlug"
+msgstr "URL kısaltması"
+
+msgid "plugins.generic.indexingPageManager.settings.pageSlugHelp"
+msgstr "Sayfa /about/<kısaltma> adresinde yayınlanır. Varsayılan: databases."
+
+msgid "plugins.generic.indexingPageManager.settings.error.pageSlug"
+msgstr "Kısaltma bir harfle başlamalı ve yalnızca harf, rakam ve tire içermelidir."
+
+msgid "plugins.generic.indexingPageManager.settings.error.pageSlugReserved"
+msgstr "Bu kısaltma derginin yerleşik Hakkında sayfası (iletişim, gönderiler vb.) tarafından kullanılıyor ve burada kullanılamaz."
+
+msgid "plugins.generic.indexingPageManager.settings.enableSchemaOrg"
+msgstr "SEO için Schema.org JSON-LD göm"
+
+msgid "plugins.generic.indexingPageManager.settings.enableSchemaOrgHelp"
+msgstr "Arama motorlarının derginizi hangi veritabanlarının dizinlediğini anlamasına yardımcı olan yapılandırılmış veri betiği (Organization girdilerinden oluşan bir CollectionPage) ekler."
+
+msgid "plugins.generic.indexingPageManager.settings.status.heading"
+msgstr "Eklenti durumu"
+
+msgid "plugins.generic.indexingPageManager.settings.status.activation"
+msgstr "Etkinleştirme"
+
+msgid "plugins.generic.indexingPageManager.settings.status.enabled"
+msgstr "Etkin"
+
+msgid "plugins.generic.indexingPageManager.settings.status.toggleHint"
+msgstr "Devre dışı bırakmak veya yeniden etkinleştirmek için Ayarlar → Web Sitesi → Eklentiler'i kullanın."
+
+msgid "plugins.generic.indexingPageManager.settings.status.publicUrl"
+msgstr "Genel sayfa"
+
+msgid "plugins.generic.indexingPageManager.settings.status.routeNote"
+msgstr "Eklenti etkin olduğu sürece bu adres vitrininizi gösterir. Ayrıca Ayarlar → Web Sitesi → Gezinme Menüleri yoluyla herhangi bir menüye ekleyebilirsiniz."
+
+# Admin — index list -----------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.title"
+msgstr "İndeksler ve Veritabanları"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.subtitle"
+msgstr "Derginizin yer aldığı veritabanlarını, keşif servislerini ve platformları düzenleyin."
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.preview"
+msgstr "Önizle"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.addIndex"
+msgstr "İndeks Ekle"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.addToThis"
+msgstr "Bu bölüme ekle"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.toggleActive"
+msgstr "Etkin durumunu değiştir"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.dragSection"
+msgstr "Bölümü yeniden sıralamak için sürükleyin"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.dragIndex"
+msgstr "İndeksi yeniden sıralamak için sürükleyin"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.sectionEmpty"
+msgstr "Bu bölümde henüz indeks yok."
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.empty.title"
+msgstr "Henüz indeks yok"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.empty.body"
+msgstr "İlk dizinleme veritabanınızı ekleyerek başlayın."
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.total"
+msgstr "Toplam İndeks"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.active"
+msgstr "Etkin"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.sections"
+msgstr "Dolu bölümler"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.template"
+msgstr "Etkin şablon"
+
+msgid "plugins.generic.indexingPageManager.admin.indexList.stats.cols"
+msgstr "sütun"
+
+# Admin — index form -----------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.title"
+msgstr "İndeks"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.addTitle"
+msgstr "İndeks Ekle"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.editTitle"
+msgstr "İndeksi Düzenle"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.saved"
+msgstr "İndeks kaydedildi."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logo"
+msgstr "Logo"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoChoose"
+msgstr "Logo seç"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoRemove"
+msgstr "Logoyu kaldır"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoPlaceholder"
+msgstr "Logo yüklenmedi"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.logoHelp"
+msgstr "Önerilen: yaklaşık 400×150 px ve ~100 KB altında yatay bir logo. Tüm logoları aynı boyutta tutmak hem daha düzenli görünür hem de sayfanın daha hızlı yüklenmesine yardımcı olur. Şeffaf arka planlı PNG en iyi görünümü verir; JPG, PNG veya WebP kabul edilir."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.status"
+msgstr "Durum"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.isActive"
+msgstr "Etkin (genel sayfada görünür)"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.isActiveHelp"
+msgstr "Etkin olmayan girdiler veritabanında kalır ancak ön yüzde gösterilmez."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.sections"
+msgstr "Bölümler"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.details"
+msgstr "İndeks bilgileri"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.detailsHelp"
+msgstr "Çok dilli alanlar — her dil için doldurun. Çoğu indeks adı her dilde aynı okunan marka adlarıdır."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.name"
+msgstr "Ad"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.description"
+msgstr "Kısa açıklama (isteğe bağlı)"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.descriptionHelp"
+msgstr "\"Logolar + adlar\" şablonu etkinken logonun altında gösterilir. Düz metin; HTML temizlenir."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.link"
+msgstr "Dış bağlantı"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.url"
+msgstr "URL"
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.urlHelp"
+msgstr "İndeksin kendi web sitesine bağlantı. http:// veya https:// ile başlamalıdır."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.error.name"
+msgstr "Ad en az birincil dil için zorunludur."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.error.sections"
+msgstr "En az bir bölüm seçin."
+
+msgid "plugins.generic.indexingPageManager.admin.indexForm.error.url"
+msgstr "http:// veya https:// ile başlayan tam bir URL girin."
+
+# Admin — sections -------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.sections.title"
+msgstr "Bölümler"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.subtitle"
+msgstr "Yerleşik bölümler silinemez ancak yeniden adlandırılabilir, sıralanabilir veya gizlenebilir."
+
+msgid "plugins.generic.indexingPageManager.admin.sections.backToIndexes"
+msgstr "İndekslere dön"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.addSection"
+msgstr "Bölüm Ekle"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.builtIn"
+msgstr "Yerleşik"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.custom"
+msgstr "Özel"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.inactive"
+msgstr "Gizli"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.empty.title"
+msgstr "Henüz bölüm yok."
+
+msgid "plugins.generic.indexingPageManager.admin.sections.error.cannotDeleteBuiltIn"
+msgstr "Yerleşik bölümler silinemez. Gizlemek için etkin durumunu kapatın."
+
+# Admin — section form ---------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.title"
+msgstr "Bölüm"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.addTitle"
+msgstr "Bölüm Ekle"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.editTitle"
+msgstr "Bölümü Düzenle"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.saved"
+msgstr "Bölüm kaydedildi."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.displayName"
+msgstr "Görünen ad"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.displayNameHelp"
+msgstr "Okuyucuların bölüm başlığı olarak gördüğü ad. Her dil için çevirin."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.isActive"
+msgstr "Etkin"
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.isActiveHelp"
+msgstr "Etkin olmayan bölümler, indeks içerse bile genel sayfada gizlenir."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.error.displayName"
+msgstr "Görünen ad en az birincil dil için zorunludur."
+
+msgid "plugins.generic.indexingPageManager.admin.sectionForm.error.slug"
+msgstr "Görünen addan bir tanımlayıcı türetilemedi. Lütfen önce bir görünen ad girin."
+
+# Admin — template selector ----------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.templates.title"
+msgstr "Şablon"
+
+msgid "plugins.generic.indexingPageManager.admin.templateSelector.title"
+msgstr "Bir görünüm şablonu seçin"
+
+msgid "plugins.generic.indexingPageManager.admin.templateSelector.help"
+msgstr "Okuyucularınızın göreceği düzeni ve kaç sütun logo gösterileceğini seçin. Bunu istediğiniz zaman değiştirebilirsiniz."
+
+# Admin — shared ---------------------------------------------------------
+
+msgid "plugins.generic.indexingPageManager.admin.formError"
+msgstr "Lütfen vurgulanan alanları düzeltip yeniden deneyin."
+
+msgid "plugins.generic.indexingPageManager.admin.footer.developedBy"
+msgstr "Geliştiren"
+
+msgid "plugins.generic.indexingPageManager.admin.js.requestFailed"
+msgstr "İstek başarısız oldu. Lütfen yeniden deneyin."
+
+msgid "plugins.generic.indexingPageManager.admin.js.deleteIndexConfirm"
+msgstr "\"{$name}\" silinsin mi? Bu işlem geri alınamaz."
+
+msgid "plugins.generic.indexingPageManager.admin.js.deleteSectionConfirm"
+msgstr "\"{$name}\" bölümü silinsin mi? Bu bölümdeki indeksler kalır ancak bu atamayı kaybeder."
+
+msgid "plugins.generic.indexingPageManager.admin.js.logoUploadFailed"
+msgstr "Logo yüklenemedi. Lütfen yeniden deneyin."
+
+msgid "plugins.generic.indexingPageManager.admin.js.saving"
+msgstr "Kaydediliyor…"
+
+msgid "plugins.generic.indexingPageManager.admin.js.saved"
+msgstr "Kaydedildi."
+
+msgid "plugins.generic.indexingPageManager.admin.js.saveFailed"
+msgstr "Kaydetme başarısız oldu. Lütfen yeniden deneyin."
+
+msgid "plugins.generic.indexingPageManager.admin.js.networkError"
+msgstr "Ağ hatası. Lütfen yeniden deneyin."
+
+msgid "plugins.generic.indexingPageManager.admin.error.invalidRequest"
+msgstr "Oturumunuz sona ermiş veya istek geçersiz. Lütfen sayfayı yenileyip yeniden deneyin."
+
+msgid "plugins.generic.indexingPageManager.admin.tabs.ariaLabel"
+msgstr "İndeksleme Sayfası bölümleri"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.slugLabel"
+msgstr "Bölüm kısa adı: {$slug}"
+
+msgid "plugins.generic.indexingPageManager.admin.sections.toggleActive"
+msgstr "Etkin durumunu değiştir"
