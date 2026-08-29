@@ -3,6 +3,22 @@
 All notable changes to this plugin are documented here. Versioning follows the
 plugin's `version.xml` `<release>` value; every shipped change bumps it.
 
+## 0.4.8 — 2026-08-29
+
+- **Fix: the new sidebar entry led to "The operation you tried to access is
+  either private or doesn't exist" (authorization denied).**
+  `IndexingPageManagerManageHandler::authorize()` wrapped
+  `ContextAccessPolicy` inside a `PolicySet(COMBINING_PERMIT_OVERRIDES)`
+  together with a `PKPSiteAccessPolicy`. When the site policy permitted
+  first (e.g. for a Site Admin) the set short-circuited before
+  `ContextAccessPolicy` ran — so `RoleBasedHandlerOperationPolicy` never
+  called `markRoleAssignmentsChecked()`, and `PKPHandler::authorize()`'s
+  final guard (`$decision == PERMIT && (empty($_roleAssignments) ||
+  $_roleAssignmentsChecked)`) returned `false` despite the PERMIT decision.
+  `authorize()` now adds `ContextAccessPolicy` alone — the exact pattern
+  core `PKPManageHandler` / `SettingsHandler` use. It permits a Journal
+  Manager *or* a Site Admin and marks the role assignments checked.
+
 ## 0.4.7 — 2026-08-29
 
 - **Fix: sidebar entry never appeared even with no errors in the log.**

@@ -41,8 +41,6 @@ use APP\template\TemplateManager;
 use PKP\controllers\page\PageHandler;
 use PKP\plugins\PluginRegistry;
 use PKP\security\authorization\ContextAccessPolicy;
-use PKP\security\authorization\PKPSiteAccessPolicy;
-use PKP\security\authorization\PolicySet;
 
 class IndexingPageManagerManageHandler extends PageHandler
 {
@@ -74,10 +72,19 @@ class IndexingPageManagerManageHandler extends PageHandler
 
     public function authorize($request, &$args, $roleAssignments)
     {
-        $rolePolicy = new PolicySet(COMBINING_PERMIT_OVERRIDES);
-        $rolePolicy->addPolicy(new PKPSiteAccessPolicy($request, null, $roleAssignments));
-        $rolePolicy->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
-        $this->addPolicy($rolePolicy);
+        // ContextAccessPolicy alone — exactly what core management pages
+        // (PKPManageHandler / SettingsHandler) use. It builds a
+        // RoleBasedHandlerOperationPolicy per assigned role (MANAGER and
+        // SITE_ADMIN here), so a Journal Manager OR a Site Admin is
+        // permitted, AND — crucially — it calls markRoleAssignmentsChecked()
+        // when it runs. The previous version wrapped this in a
+        // PolicySet(PERMIT_OVERRIDES) together with a PKPSiteAccessPolicy;
+        // when that site policy permitted first (e.g. for a Site Admin) the
+        // set short-circuited before ContextAccessPolicy ran, so
+        // _roleAssignmentsChecked stayed false and PKPHandler::authorize()
+        // returned false anyway → "authorization denied" despite a PERMIT
+        // decision.
+        $this->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
         return parent::authorize($request, $args, $roleAssignments);
     }
 
