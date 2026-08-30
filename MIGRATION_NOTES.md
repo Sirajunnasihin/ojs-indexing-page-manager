@@ -97,11 +97,21 @@ OJS 3.5 installation before this ships to production.
    `PKP\form\Form`, `APP\handler\Handler`, `APP\template\TemplateManager`).
    Business logic in these files was otherwise left untouched.
 
-8. **Global constants left alone.** Route/role constants (`ROUTE_PAGE`,
-   `ROLE_ID_SITE_ADMIN`, `ROLE_ID_MANAGER`, `CONTEXT_SITE`,
-   `STYLE_SEQUENCE_LATE`, etc.) are still defined globally via `define()` in
-   OJS 3.5 and don't require namespace-qualification to use from inside a
-   namespaced class.
+8. **Global constants mostly left alone — role constants qualified.**
+   Route/style constants (`ROUTE_PAGE`, `CONTEXT_SITE`, `STYLE_SEQUENCE_LATE`,
+   etc.) are defined during bootstrap in both OJS 3.4 and 3.5 and don't need
+   namespace-qualification from inside a namespaced class.
+
+   The `ROLE_ID_*` back-compat `define()`s are the exception: under OJS 3.4
+   they only run once `PKP\security\Role` is autoloaded (the `define()` calls
+   sit at the bottom of that class file). `IndexingPageManagerManageHandler`'s
+   constructor runs inside the `loadHandler` hook — before anything has
+   touched `Role` — so a bare `ROLE_ID_SITE_ADMIN` there fatals with
+   "Undefined constant …\ROLE_ID_SITE_ADMIN" on 3.4 (3.5 loads the defines at
+   bootstrap, so it worked there). Fixed by using the class constants
+   (`Role::ROLE_ID_SITE_ADMIN` / `Role::ROLE_ID_MANAGER`, via
+   `use PKP\security\Role;`) in `IndexingPageManagerManageHandler` and in
+   `IndexingPageManagerPlugin`'s backend-menu hook.
 
 9. **Nothing changed** in: the DB schema/migration logic, the Smarty
    templates' markup (aside from the footer link), the JS admin UI, the CSS,

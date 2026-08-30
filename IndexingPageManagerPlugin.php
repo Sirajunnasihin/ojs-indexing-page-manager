@@ -34,6 +34,7 @@ use PKP\linkAction\request\AjaxModal;
 use PKP\linkAction\request\RedirectAction;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
+use PKP\security\Role;
 
 define('INDEXING_PAGE_MANAGER_PLUGIN_NAME', 'indexingPageManager');
 
@@ -505,7 +506,7 @@ class IndexingPageManagerPlugin extends GenericPlugin
             $user = $request->getUser();
             if (!$user) return false;
             $roles = $this->_getUserRoles($user, $context);
-            if (!array_intersect($roles, [ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER])) {
+            if (!array_intersect($roles, [Role::ROLE_ID_SITE_ADMIN, Role::ROLE_ID_MANAGER])) {
                 return false;
             }
 

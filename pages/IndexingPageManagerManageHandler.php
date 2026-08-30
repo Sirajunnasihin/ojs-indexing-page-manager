@@ -40,6 +40,7 @@ use APP\plugins\generic\indexingPageManager\classes\form\IpmTemplateForm;
 use APP\handler\Handler;
 use APP\template\TemplateManager;
 use PKP\plugins\PluginRegistry;
+use PKP\security\Role;
 use PKP\security\authorization\ContextAccessPolicy;
 
 /**
@@ -69,7 +70,7 @@ class IndexingPageManagerManageHandler extends Handler
         // mustaches and loses the sidebar.
         $this->_isBackendPage = true;
         $this->addRoleAssignment(
-            [ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER],
+            [Role::ROLE_ID_SITE_ADMIN, Role::ROLE_ID_MANAGER],
             [
                 'index',
                 'indexes', 'indexForm', 'indexSave', 'indexDelete',
