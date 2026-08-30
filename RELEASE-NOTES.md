@@ -5,6 +5,64 @@ history see [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
+## v0.5.0 — 2026-08-30
+
+**Security and hardening release from a full code review.** No database changes,
+no content touched — upgrade from any 0.4.x.
+
+### Security
+
+- **Cross-journal content injection (fixed).** On a multi-journal site, a
+  Journal Manager for one journal could attach one of their index entries — with
+  an arbitrary name, logo image and outbound link — to a *section belonging to a
+  different journal*, by tampering with the form submission. The foreign entry
+  then showed up on that other journal's public "Indexes & Databases" page (and
+  its SEO metadata), and the affected journal's own managers had no way to
+  remove it from the admin screen. The form now only accepts sections that
+  belong to the journal being edited, and the public page is doubly guarded so a
+  stray assignment can never render. If you run a single journal, you were not
+  exposed; upgrading is still recommended.
+
+### Fixes
+
+- **Saving a section with a duplicate URL slug returned a *500* error** instead
+  of a friendly "already in use" message. Custom slugs are now de-duplicated
+  automatically (`my-section`, `my-section-2`, …).
+- **Rare data mix-up when several index entries were created in one go** (e.g.
+  the bundled demo data): a database quirk could write one entry's name onto
+  another. Now guarded.
+- **Opening the management screen with an expired session** showed a raw error
+  page; it now shows the normal "please retry" notice.
+- **OJS 3.4: the management screen could fail to load** with an "undefined
+  constant" error, depending on class-load order. Fixed by referencing the role
+  constants directly.
+- **A plugin display helper could go missing** on some AJAX-rendered screens,
+  leaving logos or links blank. Fixed.
+
+### Hardening
+
+- Logo uploads are now capped at **2 MB**.
+- External links entered without a scheme (`//example.org/…`) are forced to
+  `https://`.
+- Index names are trimmed of markup and limited to 300 characters on save.
+- Defence-in-depth around settings deserialization and JSON encoding of
+  translated UI strings.
+- New automated test suite for the link-safety filter.
+
+### Upgrading
+
+Same as v0.4.9 — install as the web user (or upload the `.tar.gz` through
+*Settings → Website → Plugins*), then restart PHP-FPM. Nothing in your data is
+changed.
+
+### Requirements
+
+- OJS 3.4.0.x or 3.5.0.x
+- PHP 8.0–8.3 (OJS 3.4 needs 8.0+, OJS 3.5 needs 8.2+)
+- MySQL / MariaDB
+
+---
+
 ## v0.4.9 — 2026-08-29
 
 **The public showcase page now works, and the plugin has a proper home in the admin sidebar.**

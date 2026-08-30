@@ -3,6 +3,73 @@
 All notable changes to this plugin are documented here. Versioning follows the
 plugin's `version.xml` `<release>` value; every shipped change bumps it.
 
+## 0.5.0 — 2026-08-30
+
+Security + hardening release from a full code review. No schema changes; no
+content touched. Upgrade from any 0.4.x.
+
+- **Security (was: cross-journal content injection).** The index add/edit form
+  accepted `sectionIds[]` without checking the sections belonged to the current
+  journal. A Journal Manager on one journal could POST another journal's section
+  id; the index was attached to it and rendered on that journal's public
+  showcase page (and in its Schema.org JSON-LD) — an unremovable-via-UI row,
+  since the victim journal's admin actions are journal-scoped.
+  `IpmIndexForm::readInputData()` now intersects the submitted ids with the
+  editing journal's own sections (an empty result trips the existing
+  "sections required" validator). Defence-in-depth:
+  `IpmIndexDAO::getBySectionId()` and
+  `IpmIndexSectionDAO::countIndexesInSection()` gained an optional `journalId`
+  filter, passed by every caller (public handler, admin list, section list,
+  `{ipm_blocks}` embed), so a pre-existing bad pivot row can't render or be
+  counted cross-journal.
+- **Fix: duplicate section slug → HTTP 500.** A hand-edited (non-blank) slug on
+  section create/edit skipped the uniqueness check and hit the
+  `(journal_id, slug)` UNIQUE constraint, throwing an uncaught exception.
+  `IpmSectionForm::readInputData()` now runs every non-built-in slug — typed or
+  derived — through `slugify()` + `_uniqueSlug()`.
+- **Fix: stale `lastInsertId()` could cross-write index settings.**
+  `IpmIndexDAO::insertObject()` now sanity-checks the resolved id against the
+  journal and falls back to `MAX(index_id)` for that journal before writing
+  localized fields, so back-to-back inserts (e.g. the demo seeder) can't write
+  one index's name/description onto another's settings rows. Mirrors
+  `IpmSectionDAO`'s existing natural-key fallback.
+- **Fix: `manage()` returned an HTML 500 instead of JSON on a bad CSRF token.**
+  The verb dispatch in `IndexingPageManagerPlugin::manage()` is wrapped in
+  `try/catch (\Throwable)`; failures are logged and returned as
+  `JSONMessage(false, …admin.error.invalidRequest)`, which both client
+  consumers already understand.
+- **Fix: undefined `ROLE_ID_*` constants under OJS 3.4.** The manage handler's
+  constructor runs inside the `loadHandler` hook before `PKP\security\Role` is
+  autoloaded, so the bare back-compat constants fataled on 3.4 (3.5 defines
+  them at bootstrap). Now uses `Role::ROLE_ID_SITE_ADMIN` /
+  `Role::ROLE_ID_MANAGER` in the handler and the backend-menu hook.
+- **Hardening: `unserialize()` object-injection guard.**
+  `IpmIndexDAO::_eagerLoadSettings()` passes `['allowed_classes' => false]`.
+- **Hardening: logo upload size cap.** `IpmLogoStore` rejects uploads over
+  2 MiB on both the multipart and TemporaryFile paths. The class header now
+  documents the nginx/IIS script-deny rule the generated `.htaccess` can't
+  provide.
+- **Hardening: URL sanitizer.** Protocol-relative `//host/path` links are now
+  pinned to `https://` instead of passed through scheme-less.
+- **Hardening: index name.** Names are tag-stripped, whitespace-collapsed and
+  capped at 300 characters at the input boundary (matches the existing
+  description handling).
+- **Fix: Smarty helpers on a second TemplateManager.**
+  `IndexingPageManagerSmartyHelper` tracks registration per manager instance
+  (`spl_object_id`) instead of one process-global flag, so `{ipm_logo_url}` /
+  `{ipm_safe_url}` / `{ipm_blocks}` stay defined on component/AJAX renders that
+  create their own manager.
+- **Fix: `templateFlags()` loose `switch`.** Casts to string first so PHP 7.x's
+  loose `switch` can't match `0`/`null` against `case 'logos'`. Return types
+  added to `templateFlags()` / `normalizeTemplate()`.
+- **Robustness: `json_encode()` fallbacks.** The JS bootstrap islands fall back
+  to `{}` and the raw JSON envelopes to `{"ok":false,…}` if a translation
+  string carries invalid UTF-8, so a `fetch` caller never gets an empty body.
+- **Tests.** Added `tests/IndexingPageManagerUrlSanitizerTest.php` — a
+  self-contained PHPUnit suite covering the URL scheme allow-list's bypass
+  vectors and accepted forms.
+- **Docs.** Corrected mislabeled PHPDoc class names; added `.gitignore`.
+
 ## 0.4.9 — 2026-08-29
 
 - **Fix: the manage page STILL redirected to
